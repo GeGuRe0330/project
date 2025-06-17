@@ -12,6 +12,12 @@ import java.util.Scanner;
 import java.util.regex.Pattern;
 
 import comparator.RsComparator;
+import dao.MovieDAO;
+import dao.MovieDAOImpl;
+import dao.ReservationDAO;
+import dao.ReservationDAOImpl;
+import dao.ReviewDAO;
+import dao.ReviewDAOImpl;
 import model.MovieData;
 import model.ReservationData;
 import model.ReviewData;
@@ -20,6 +26,9 @@ public class MovieMaterialize implements MovieInterface {
     public static String mtTitle;
     public static String resTitle;
     public static String rvTitle;
+    MovieDAO mDAO = new MovieDAOImpl();
+    ReservationDAO rsDAO = new ReservationDAOImpl();
+    ReviewDAO rvDAO = new ReviewDAOImpl();
 
     // 데이터 등록
     @Override
@@ -128,9 +137,9 @@ public class MovieMaterialize implements MovieInterface {
                 int reviewNum = Integer.parseInt(tokens[0]);
                 int movieNum = Integer.parseInt(tokens[1]);
                 double reviewRate = Double.parseDouble(tokens[2]);
-                String comment = tokens[3];
+                String reviewComment = tokens[3];
 
-                ReviewData rvData = new ReviewData(reviewNum, movieNum, reviewRate, comment);
+                ReviewData rvData = new ReviewData(reviewNum, movieNum, reviewRate, reviewComment);
                 rvList.add(rvData);
             }
 
@@ -239,7 +248,7 @@ public class MovieMaterialize implements MovieInterface {
             for (int i = 0; i < rvList.size(); i++) {
                 ReviewData review = rvList.get(i);
                 writer.print(review.getReviewNum() + "," + review.getMovieNum() + "," + review.getReviewRate() + ","
-                        + review.getComment());
+                        + review.getreviewComment());
                 if (i < rvList.size() - 1) {
                     writer.println();
                 }
@@ -290,6 +299,7 @@ public class MovieMaterialize implements MovieInterface {
             MovieData data = new MovieData(max + 1, movieName, releaseDate, 0);
 
             mvList.add(data);
+            mDAO.insertMovie(data);
             clear();
             System.out.println("╭──────────────────────────────────────────────────────────.★..─╮");
             System.out.println("|               해당 영화가 개봉 처리 되었습니다!               |");
@@ -358,6 +368,7 @@ public class MovieMaterialize implements MovieInterface {
 
             findMovieData.setMovieName(movieName);
             findMovieData.setReleaseDate(releaseDate);
+            mDAO.updateMovie(findMovieData);
             clear();
 
             System.out.println("╭──────────────────────────────────────────────────────────.★..─╮");
@@ -408,6 +419,7 @@ public class MovieMaterialize implements MovieInterface {
             }
 
             mvList.remove(findMovieData);
+            mDAO.deleteMovie(findMovieData.getMovieNum());
             clear();
             System.out.println("╭──────────────────────────────────────────────────────────.★..─╮");
             System.out.printf("\n     삭제 처리 완료되었습니다. \n     영화 제목 : %s\n\n", findMovieData.getMovieName());
@@ -660,6 +672,7 @@ public class MovieMaterialize implements MovieInterface {
             ReservationData rsData = new ReservationData(phoneNum, userName, movieName, seatNum);
 
             rsList.add(rsData);
+            rsDAO.insertReservation(rsData);
             clear();
 
             System.out.printf(
@@ -702,7 +715,7 @@ public class MovieMaterialize implements MovieInterface {
                     break;
                 }
             }
-
+            
             if (findMovieData == null) {
                 clear();
                 System.out.println("╭──────────────────────────────────────────────────────────.★..─╮");
@@ -712,6 +725,7 @@ public class MovieMaterialize implements MovieInterface {
                 clear();
                 return;
             }
+            rsDAO.deleteReservation(findMovieData.getPhoneNum());
 
             System.out.printf("╭──────────────────────────────────────────────────────────.★..─╮\n\n");
             System.out.printf("   삭제 처리 완료되었습니다. 이름 : %s  |  영화 : %s\n\n", findMovieData.getUserName(),
@@ -938,7 +952,7 @@ public class MovieMaterialize implements MovieInterface {
             selecData.setUserName(userName);
             selecData.setMovieName(movieName);
             selecData.setSeatNum(seatNum);
-
+            rsDAO.updateReservation(selecData, inputNum);
             clear();
 
             System.out.printf(
@@ -1010,11 +1024,11 @@ public class MovieMaterialize implements MovieInterface {
 
             }
 
-            String inputComment = null;
+            String inputReviewComment = null;
             while (true) {
                 System.out.print("리뷰를 작성해주세요. > ");
-                inputComment = scan.nextLine();
-                if (inputComment.trim().isEmpty()) {
+                inputReviewComment = scan.nextLine();
+                if (inputReviewComment.trim().isEmpty()) {
                     clear();
                     System.out.println("╭──────────────────────────────────────────────────────────.★..─╮");
                     System.out.println("    리뷰는 공백일 수 없습니다. 다시 입력해주세요.");
@@ -1025,7 +1039,7 @@ public class MovieMaterialize implements MovieInterface {
                 }
             }
 
-            String comment = "\"" + inputComment + "\"";
+            String reviewComment = "\"" + inputReviewComment + "\"";
 
             int max = Integer.MIN_VALUE;
             for (ReviewData data : rvList) {
@@ -1033,13 +1047,15 @@ public class MovieMaterialize implements MovieInterface {
                     max = data.getReviewNum();
                 }
             }
-            ReviewData data = new ReviewData(max + 1, movieNum, reviewRate, comment);
+            ReviewData data = new ReviewData(max + 1, movieNum, reviewRate, reviewComment);
+            rvDAO.insertReview(data);
 
             rvList.add(data);
             clear();
             System.out.println("╭──────────────────────────────────────────────────────────.★..─╮");
             System.out.printf("\n     해당 리뷰가 등록처리 되었습니다!\n\n");
-            System.out.printf("   영화 이름 : %s | 평점 %.1f\n  리뷰 : %s\n\n", movieName, reviewRate, comment);
+            System.out.printf("   영화 이름 : %s | 평점 %.1f\n  리뷰 : %s\n\n", movieName, reviewRate,
+                    reviewComment);
             System.out.println("╰─..★.──────────────────────────────────────────────────────────╯");
 
             Thread.sleep(3000);
@@ -1079,7 +1095,7 @@ public class MovieMaterialize implements MovieInterface {
                     }
 
                     System.out.printf("     영화 제목 : %s | 평점 : %.1f\n", findName, data.getReviewRate());
-                    System.out.printf("     코멘트 : %s\n\n", data.getComment());
+                    System.out.printf("     코멘트 : %s\n\n", data.getreviewComment());
                 }
                 System.out.println("╰─..★.──────────────────────────────────────────────────────────╯");
 

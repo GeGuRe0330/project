@@ -9,6 +9,13 @@ import model.ReviewData;
 import java.util.ArrayList;
 import java.util.Scanner;
 
+import dao.MovieDAO;
+import dao.MovieDAOImpl;
+import dao.ReservationDAO;
+import dao.ReservationDAOImpl;
+import dao.ReviewDAO;
+import dao.ReviewDAOImpl;
+
 public class MovieMain {
     public static void main(String[] args) {
         ArrayList<MovieData> mvList = new ArrayList<MovieData>();
@@ -17,13 +24,16 @@ public class MovieMain {
         Scanner scan = new Scanner(System.in);
 
         MovieInterface mm = new MovieMaterialize();
+        MovieDAO mDAO = new MovieDAOImpl();
+        ReservationDAO rsDAO = new ReservationDAOImpl();
+        ReviewDAO rvDAO = new ReviewDAOImpl();
 
         boolean stopFlag = false;
 
         mm.clear();
-        mm.movieTableLoad(mvList);
-        mm.resTableLoad(rsList);
-        mm.reviewTableLoad(rvList);
+        mvList = mDAO.movieTableLoad();
+        rsList = rsDAO.getAllReservations();
+        rvList = rvDAO.getAllReviews();
         mm.clear();
 
         while (!stopFlag) {
@@ -66,9 +76,9 @@ public class MovieMain {
                         break;
                     case MovieMenu.EXIT:
                         mm.clear();
-                        mm.movieTableSave(mvList, rsList);
-                        mm.resTableSave(rsList);
-                        mm.reviewTableSave(rvList);
+                        // mm.movieTableSave(mvList, rsList);
+                        // mm.resTableSave(rsList);
+                        // mm.reviewTableSave(rvList);
                         mm.clear();
                         System.out.println("정상적으로 데이터가 저장되었습니다. 이용해주셔서 감사합니다.");
                         stopFlag = true;
