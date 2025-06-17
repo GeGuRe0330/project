@@ -163,6 +163,7 @@ public class MovieMaterialize implements MovieInterface {
 
     @Override
     public void movieTableSave(ArrayList<MovieData> mvList, ArrayList<ReservationData> rsList) {
+        String mtTitle = "movieNum,movieName,releaseDate,reservationCount";
         try {
             // MovieData[reservationCount] 최신화
             for (MovieData data : mvList) {
@@ -207,6 +208,7 @@ public class MovieMaterialize implements MovieInterface {
 
     @Override
     public void resTableSave(ArrayList<ReservationData> rsList) {
+        String resTitle = "phoneNum,userName,movieName,seatNum";
         try {
             FileOutputStream fo = new FileOutputStream("res/reservationInfoTable.txt");
             PrintWriter writer = new PrintWriter(fo);
@@ -239,6 +241,7 @@ public class MovieMaterialize implements MovieInterface {
 
     @Override
     public void reviewTableSave(ArrayList<ReviewData> rvList) {
+        String rvTitle = "reviewNum,movieNum,reviewRate,comment";
         try {
             FileOutputStream fo = new FileOutputStream("res/reviewTable.txt");
             PrintWriter writer = new PrintWriter(fo);

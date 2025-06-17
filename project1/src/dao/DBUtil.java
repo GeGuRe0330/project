@@ -23,7 +23,7 @@ public class DBUtil {
 
             Class.forName(driver);
             con = DriverManager.getConnection(url, id, pwd);
-            System.out.println("DB 연결 성공🐸");
+            // System.out.println("DB 연결 성공🐸");
         } catch (IOException e) {
             System.out.println("[" + e.toString() + "]");
         } catch (ClassNotFoundException e) {

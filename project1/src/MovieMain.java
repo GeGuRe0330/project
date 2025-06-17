@@ -76,9 +76,10 @@ public class MovieMain {
                         break;
                     case MovieMenu.EXIT:
                         mm.clear();
-                        // mm.movieTableSave(mvList, rsList);
-                        // mm.resTableSave(rsList);
-                        // mm.reviewTableSave(rvList);
+                        // .txt 파일로 저장
+                        mm.movieTableSave(mvList, rsList);
+                        mm.resTableSave(rsList);
+                        mm.reviewTableSave(rvList);
                         mm.clear();
                         System.out.println("정상적으로 데이터가 저장되었습니다. 이용해주셔서 감사합니다.");
                         stopFlag = true;
