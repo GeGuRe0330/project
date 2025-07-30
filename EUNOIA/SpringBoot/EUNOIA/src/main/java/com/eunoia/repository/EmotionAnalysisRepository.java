@@ -8,4 +8,6 @@ import java.util.Optional;
 
 public interface EmotionAnalysisRepository extends JpaRepository<EmotionAnalysis,Long> {
     Optional<EmotionAnalysis> findByEmotionEntry(EmotionEntry entry);
+
+    void deleteByEmotionEntry_Id(Long id);
 }

@@ -4,10 +4,13 @@ import com.eunoia.domain.EmotionEntry;
 import com.eunoia.domain.Member;
 import com.eunoia.dto.EmotionEntryRequestDTO;
 import com.eunoia.dto.EmotionEntryResponseDTO;
+import com.eunoia.repository.EmotionAnalysisRepository;
 import com.eunoia.repository.EmotionEntryRepository;
 import com.eunoia.repository.MemberRepository;
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -16,10 +19,13 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class EmotionEntryServiceImpl implements EmotionEntryService {
 
     private final EmotionEntryRepository emotionEntryRepository;
     private final MemberRepository memberRepository;
+    private final EmotionAnalysisRepository emotionAnalysisRepository;
+
 
     @Override
     public EmotionEntryResponseDTO createEmotionEntry(Long memberId, EmotionEntryRequestDTO dto) {
@@ -67,11 +73,13 @@ public class EmotionEntryServiceImpl implements EmotionEntryService {
         return EmotionEntryResponseDTO.from(emotionEntryRepository.save(entry));
     }
 
+    @Transactional
     @Override
+    @Modifying
     public void deleteEmotionEntry(Long id) {
-        if (!emotionEntryRepository.existsById(id)) {
-            throw new EntityNotFoundException("삭제할 감정 기록이 없습니다. ID: " + id);
-        }
+        EmotionEntry entry = emotionEntryRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("감정 기록을 찾을 수 없습니다. ID: " + id));
+        emotionAnalysisRepository.deleteByEmotionEntry_Id(entry.getId());
         emotionEntryRepository.deleteById(id);
     }
 }
