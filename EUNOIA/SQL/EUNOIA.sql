@@ -22,3 +22,4 @@ select * from user_tables;
 select * from member;
 select * from EMOTION_ENTRY;
 select * from EMOTION_ANALYSIS;
+select * from ANALYSIS_WARM_MESSAGE;

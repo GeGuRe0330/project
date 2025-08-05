@@ -14,7 +14,7 @@ const SidebarNav = () => {
 
             <nav className="flex flex-col gap-4">
                 <Link
-                    to="/"
+                    to="/dashboard"
                     className={`hover:text-primary-dark transition-all ${isActive('/') ? 'font-bold underline' : ''
                         }`}
                 >

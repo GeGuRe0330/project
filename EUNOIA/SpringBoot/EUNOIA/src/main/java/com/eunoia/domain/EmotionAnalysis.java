@@ -3,6 +3,8 @@ package com.eunoia.domain;
 import jakarta.persistence.*;
 import lombok.*;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter
@@ -27,7 +29,7 @@ public class EmotionAnalysis {
     @JoinColumn(name = "emotion_entry_id", nullable = false)
     private EmotionEntry emotionEntry;
 
-    @Column(nullable = false)
+    @Column(nullable = true)
     private String emotionDetected;
 
     @Column(length = 255)
@@ -38,6 +40,18 @@ public class EmotionAnalysis {
 
     @Lob
     private String flowHint;
+
+    @ElementCollection
+    @CollectionTable(name = "analysis_warm_message", joinColumns = @JoinColumn(name = "analysis_id"))
+    @Column(name = "warm_message")
+    private List<String> warmMessages = new ArrayList<>();
+
+    @Lob
+    @Column(name = "emotion_summary")
+    private String emotionSummary;
+
+    @Column(name = "emotion_score")
+    private Double emotionScore;
 
     private LocalDateTime createdAt;
 

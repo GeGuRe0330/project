@@ -31,3 +31,6 @@ build/
 
 ### VS Code ###
 .vscode/
+
+### GPT API KEY ###
+/src/main/resources/application.properties

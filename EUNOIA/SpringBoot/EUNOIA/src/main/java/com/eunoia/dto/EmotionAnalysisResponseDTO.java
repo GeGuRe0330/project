@@ -4,6 +4,7 @@ import com.eunoia.domain.EmotionAnalysis;
 import lombok.*;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Getter
 @Setter
@@ -17,6 +18,9 @@ public class EmotionAnalysisResponseDTO {
     private String insightSummary;
     private String flowHint;
     private LocalDateTime createdAt;
+    private List<String> warmMessages;
+    private String emotionSummary;
+    private Double emotionScore;
 
     public static EmotionAnalysisResponseDTO from(EmotionAnalysis analysis) {
         return EmotionAnalysisResponseDTO.builder()
@@ -26,6 +30,9 @@ public class EmotionAnalysisResponseDTO {
                 .insightSummary(analysis.getInsightSummary())
                 .flowHint(analysis.getFlowHint())
                 .createdAt(analysis.getCreatedAt())
+                .warmMessages(analysis.getWarmMessages())
+                .emotionSummary(analysis.getEmotionSummary())
+                .emotionScore(analysis.getEmotionScore())
                 .build();
     }
 }

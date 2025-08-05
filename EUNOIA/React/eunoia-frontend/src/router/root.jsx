@@ -2,20 +2,31 @@ import { lazy, Suspense } from 'react';
 import { createBrowserRouter } from 'react-router-dom';
 import Layout from '../layout/Layout';
 
+
+const IntroPage = lazy(() => import('../pages/intro/IntroPage'));
 const MainPage = lazy(() => import('../pages/main/MainPage'));
 const WritePage = lazy(() => import('../pages/write/writePage'));
 const InsightPage = lazy(() => import('../pages/insight/InsightPage'));
+const LoadingPage = lazy(() => import('../pages/loading/LoadingPage'));
 
 const root = createBrowserRouter([
+    {
+        path: '/',
+        element: (
+            <Suspense fallback={<div>Loading...</div>}>
+                <IntroPage />
+            </Suspense>
+        )
+    },
     {
         path: '/',
         element: <Layout />,
         children: [
             {
-                index: true,
+                path: 'dashboard',
                 element: (
                     <Suspense fallback={<div>Loading...</div>}>
-                        <MainPage />,
+                        <MainPage />
                     </Suspense>
                 )
             },
@@ -23,7 +34,7 @@ const root = createBrowserRouter([
                 path: 'write',
                 element: (
                     <Suspense fallback={<div>Loading...</div>}>
-                        <WritePage />,
+                        <WritePage />
                     </Suspense>
                 )
             },
@@ -31,8 +42,14 @@ const root = createBrowserRouter([
                 path: 'insight',
                 element: (
                     <Suspense fallback={<div>Loading...</div>}>
-                        <InsightPage />,
+                        <InsightPage />
                     </Suspense>
+                )
+            },
+            {
+                path: 'loading',
+                element: (
+                    <LoadingPage />
                 )
             },
         ],
