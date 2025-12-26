@@ -3,6 +3,8 @@ package com.eunoia.service;
 import com.eunoia.domain.Member;
 import com.eunoia.dto.MemberRequestDTO;
 import com.eunoia.dto.MemberResponseDTO;
+import com.eunoia.dto.authDTO.MemberSignupRequestDTO;
+import com.eunoia.dto.authDTO.MyInfoResponseDTO;
 import com.eunoia.repository.MemberRepository;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
@@ -64,5 +66,17 @@ public class MemberServiceImpl implements MemberService {
             throw new EntityNotFoundException("삭제할 회원이 존재하지 않습니다. ID: " + id);
         }
         memberRepository.deleteById(id);
+    }
+
+    @Override
+    public Long signup(MemberSignupRequestDTO request) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'signup'");
+    }
+
+    @Override
+    public MyInfoResponseDTO getMyInfo() {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'getMyInfo'");
     }
 }
