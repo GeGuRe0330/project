@@ -55,5 +55,4 @@ public class CustomUserDetails implements UserDetails {
         return true;
     }
 
-    // 나 여기까지 함. 파이팅! 내일의 나!
 }
