@@ -18,7 +18,7 @@ public interface MemberService {
 
     void deleteMember(Long id);
 
-    Long signup(MemberSignupRequestDTO request);
+    void signup(MemberSignupRequestDTO request);
 
     MyInfoResponseDTO getMyInfo();
 }

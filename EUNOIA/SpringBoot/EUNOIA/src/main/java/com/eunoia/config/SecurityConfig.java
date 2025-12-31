@@ -24,7 +24,9 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
                         // 회원가입 접근권한 허용 & 일시적 API 허용
-                        .requestMatchers(HttpMethod.POST, "/auth/signup").permitAll()
+                        .requestMatchers(org.springframework.http.HttpMethod.POST, "/api/members/**").permitAll()
+                        .requestMatchers("/api/members/user/me").authenticated()
+                        .requestMatchers(HttpMethod.POST, "/api/emotion-entries/**").authenticated()
                         .requestMatchers("/**").permitAll()
                         .anyRequest().authenticated())
 

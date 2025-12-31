@@ -1,6 +1,7 @@
 package com.eunoia.service;
 
 import com.eunoia.domain.Member;
+import com.eunoia.domain.Member.Role;
 import com.eunoia.dto.MemberRequestDTO;
 import com.eunoia.dto.MemberResponseDTO;
 import com.eunoia.dto.authDTO.MemberSignupRequestDTO;
@@ -9,6 +10,10 @@ import com.eunoia.repository.MemberRepository;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -20,6 +25,7 @@ import java.util.stream.Collectors;
 public class MemberServiceImpl implements MemberService {
 
     private final MemberRepository memberRepository;
+    private final PasswordEncoder passwordEncoder;
 
     @Override
     public MemberResponseDTO createMember(MemberRequestDTO dto) {
@@ -69,14 +75,40 @@ public class MemberServiceImpl implements MemberService {
     }
 
     @Override
-    public Long signup(MemberSignupRequestDTO request) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'signup'");
+    public void signup(MemberSignupRequestDTO dto) {
+        if (memberRepository.findByEmail(dto.getEmail()).isPresent()) {
+            throw new IllegalArgumentException("이미 사용 중인 이메일입니다.");
+        }
+
+        Member member = Member.builder()
+                .email(dto.getEmail())
+                .password(passwordEncoder.encode(dto.getPassword()))
+                .nickname(dto.getNickname())
+                .age(dto.getAge())
+                .gender(dto.getGender())
+                .role(Role.USER)
+                .build();
+
+        memberRepository.save(member);
     }
 
     @Override
     public MyInfoResponseDTO getMyInfo() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'getMyInfo'");
+        Member me = getCurrentMember();
+        return MyInfoResponseDTO.from(me);
+    }
+
+    private Member getCurrentMember() {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+
+        if (auth == null || !auth.isAuthenticated() || "anonymousUser".equals(auth.getPrincipal())) {
+            throw new IllegalStateException("로그인이 필요합니다.");
+        }
+
+        // CustomUserDetails 쓰면 auth.getName() == email
+        String email = auth.getName();
+
+        return memberRepository.findByEmail(email)
+                .orElseThrow(() -> new IllegalStateException("로그인 사용자 정보를 찾을 수 없습니다."));
     }
 }

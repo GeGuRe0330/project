@@ -11,6 +11,8 @@ import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -22,64 +24,73 @@ import java.util.stream.Collectors;
 @Transactional
 public class EmotionEntryServiceImpl implements EmotionEntryService {
 
-    private final EmotionEntryRepository emotionEntryRepository;
-    private final MemberRepository memberRepository;
-    private final EmotionAnalysisRepository emotionAnalysisRepository;
+        private final EmotionEntryRepository emotionEntryRepository;
+        private final MemberRepository memberRepository;
+        private final EmotionAnalysisRepository emotionAnalysisRepository;
 
+        @Override
+        public EmotionEntryResponseDTO createEmotionEntry(EmotionEntryRequestDTO dto) {
+                Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 
-    @Override
-    public EmotionEntryResponseDTO createEmotionEntry(Long memberId, EmotionEntryRequestDTO dto) {
-        Member member = memberRepository.findById(memberId)
-                .orElseThrow(() -> new EntityNotFoundException("회원을 찾을 수 없습니다. ID: " + memberId));
+                if (auth == null || !auth.isAuthenticated() || "anonymousUser".equals(auth.getPrincipal())) {
+                        throw new IllegalStateException("로그인이 필요합니다.");
+                }
 
-        EmotionEntry entry = EmotionEntry.builder()
-                .member(member)
-                .content(dto.getContent())
-                .emotionTag(dto.getEmotionTag())
-                .entryDate(dto.getEntryDate() != null ? LocalDate.parse(dto.getEntryDate()) : LocalDate.now())
-                .build();
+                String email = auth.getName();
 
-        return EmotionEntryResponseDTO.from(emotionEntryRepository.save(entry));
-    }
+                Member member = memberRepository.findByEmail(email)
+                                .orElseThrow(() -> new EntityNotFoundException("회원을 찾을 수 없습니다. EMAIL: " + email));
 
-    @Override
-    public EmotionEntryResponseDTO getEmotionEntryById(Long id) {
-        EmotionEntry entry = emotionEntryRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("감정 기록을 찾을 수 없습니다. ID: " + id));
+                EmotionEntry entry = EmotionEntry.builder()
+                                .member(member)
+                                .content(dto.getContent())
+                                .emotionTag(dto.getEmotionTag())
+                                .entryDate(dto.getEntryDate() != null ? LocalDate.parse(dto.getEntryDate())
+                                                : LocalDate.now())
+                                .build();
 
-        return EmotionEntryResponseDTO.from(entry);
-    }
+                return EmotionEntryResponseDTO.from(emotionEntryRepository.save(entry));
+        }
 
-    @Override
-    public List<EmotionEntryResponseDTO> getAllEmotionEntriesByMember(Long memberId) {
-        Member member = memberRepository.findById(memberId)
-                .orElseThrow(() -> new EntityNotFoundException("회원을 찾을 수 없습니다. ID: " + memberId));
+        @Override
+        public EmotionEntryResponseDTO getEmotionEntryById(Long id) {
+                EmotionEntry entry = emotionEntryRepository.findById(id)
+                                .orElseThrow(() -> new EntityNotFoundException("감정 기록을 찾을 수 없습니다. ID: " + id));
 
-        return emotionEntryRepository.findByMember(member)
-                .stream()
-                .map(EmotionEntryResponseDTO::from)
-                .collect(Collectors.toList());
-    }
+                return EmotionEntryResponseDTO.from(entry);
+        }
 
-    @Override
-    public EmotionEntryResponseDTO updateEmotionEntry(Long id, EmotionEntryRequestDTO dto) {
-        EmotionEntry entry = emotionEntryRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("수정할 감정 기록이 없습니다. ID: " + id));
+        @Override
+        public List<EmotionEntryResponseDTO> getAllEmotionEntriesByMember(Long memberId) {
+                Member member = memberRepository.findById(memberId)
+                                .orElseThrow(() -> new EntityNotFoundException("회원을 찾을 수 없습니다. ID: " + memberId));
 
-        entry.setContent(dto.getContent());
-        entry.setEmotionTag(dto.getEmotionTag());
-        entry.setEntryDate(dto.getEntryDate() != null ? LocalDate.parse(dto.getEntryDate()) : entry.getEntryDate());
+                return emotionEntryRepository.findByMember(member)
+                                .stream()
+                                .map(EmotionEntryResponseDTO::from)
+                                .collect(Collectors.toList());
+        }
 
-        return EmotionEntryResponseDTO.from(emotionEntryRepository.save(entry));
-    }
+        @Override
+        public EmotionEntryResponseDTO updateEmotionEntry(Long id, EmotionEntryRequestDTO dto) {
+                EmotionEntry entry = emotionEntryRepository.findById(id)
+                                .orElseThrow(() -> new EntityNotFoundException("수정할 감정 기록이 없습니다. ID: " + id));
 
-    @Transactional
-    @Override
-    @Modifying
-    public void deleteEmotionEntry(Long id) {
-        EmotionEntry entry = emotionEntryRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("감정 기록을 찾을 수 없습니다. ID: " + id));
-        emotionAnalysisRepository.deleteByEmotionEntry_Id(entry.getId());
-        emotionEntryRepository.deleteById(id);
-    }
+                entry.setContent(dto.getContent());
+                entry.setEmotionTag(dto.getEmotionTag());
+                entry.setEntryDate(dto.getEntryDate() != null ? LocalDate.parse(dto.getEntryDate())
+                                : entry.getEntryDate());
+
+                return EmotionEntryResponseDTO.from(emotionEntryRepository.save(entry));
+        }
+
+        @Transactional
+        @Override
+        @Modifying
+        public void deleteEmotionEntry(Long id) {
+                EmotionEntry entry = emotionEntryRepository.findById(id)
+                                .orElseThrow(() -> new EntityNotFoundException("감정 기록을 찾을 수 없습니다. ID: " + id));
+                emotionAnalysisRepository.deleteByEmotionEntry_Id(entry.getId());
+                emotionEntryRepository.deleteById(id);
+        }
 }
