@@ -7,12 +7,12 @@ import com.eunoia.dto.EmotionEntryResponseDTO;
 import com.eunoia.repository.EmotionAnalysisRepository;
 import com.eunoia.repository.EmotionEntryRepository;
 import com.eunoia.repository.MemberRepository;
+import com.eunoia.security.CurrentUserService;
+
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.jpa.repository.Modifying;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -27,19 +27,11 @@ public class EmotionEntryServiceImpl implements EmotionEntryService {
         private final EmotionEntryRepository emotionEntryRepository;
         private final MemberRepository memberRepository;
         private final EmotionAnalysisRepository emotionAnalysisRepository;
+        private final CurrentUserService currentUserService;
 
         @Override
         public EmotionEntryResponseDTO createEmotionEntry(EmotionEntryRequestDTO dto) {
-                Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-
-                if (auth == null || !auth.isAuthenticated() || "anonymousUser".equals(auth.getPrincipal())) {
-                        throw new IllegalStateException("로그인이 필요합니다.");
-                }
-
-                String email = auth.getName();
-
-                Member member = memberRepository.findByEmail(email)
-                                .orElseThrow(() -> new EntityNotFoundException("회원을 찾을 수 없습니다. EMAIL: " + email));
+                Member member = currentUserService.getCurrentMember();
 
                 EmotionEntry entry = EmotionEntry.builder()
                                 .member(member)
