@@ -8,12 +8,18 @@ import com.eunoia.dto.EmotionScoreDataDTO;
 import com.eunoia.gptapi.GPTService;
 import com.eunoia.repository.EmotionAnalysisRepository;
 import com.eunoia.repository.EmotionEntryRepository;
+import com.eunoia.security.CurrentUserService;
+import com.eunoia.security.OwnershipService;
 import com.fasterxml.jackson.databind.JsonNode;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -26,22 +32,26 @@ public class EmotionAnalysisServiceImpl implements EmotionAnalysisService {
     private final EmotionAnalysisRepository analysisRepository;
     private final EmotionEntryRepository entryRepository;
     private final GPTService gptService;
+    private final CurrentUserService currentUserService;
+    private final OwnershipService ownershipService;
 
-//    @Override
-//    public EmotionAnalysisResponseDTO createAnalysis(Long entryId, EmotionAnalysisRequestDTO dto) {
-//        EmotionEntry entry = entryRepository.findById(entryId)
-//                .orElseThrow(() -> new EntityNotFoundException("분석 대상 감정 글이 존재하지 않습니다. ID: " + entryId));
-//
-//        EmotionAnalysis analysis = EmotionAnalysis.builder()
-//                .emotionEntry(entry)
-//                .emotionDetected(dto.getEmotionDetected())
-//                .keywords(dto.getKeywords())
-//                .insightSummary(dto.getInsightSummary())
-//                .flowHint(dto.getFlowHint())
-//                .build();
-//
-//        return EmotionAnalysisResponseDTO.from(analysisRepository.save(analysis));
-//    }
+    // @Override
+    // public EmotionAnalysisResponseDTO createAnalysis(Long entryId,
+    // EmotionAnalysisRequestDTO dto) {
+    // EmotionEntry entry = entryRepository.findById(entryId)
+    // .orElseThrow(() -> new EntityNotFoundException("분석 대상 감정 글이 존재하지 않습니다. ID: "
+    // + entryId));
+    //
+    // EmotionAnalysis analysis = EmotionAnalysis.builder()
+    // .emotionEntry(entry)
+    // .emotionDetected(dto.getEmotionDetected())
+    // .keywords(dto.getKeywords())
+    // .insightSummary(dto.getInsightSummary())
+    // .flowHint(dto.getFlowHint())
+    // .build();
+    //
+    // return EmotionAnalysisResponseDTO.from(analysisRepository.save(analysis));
+    // }
 
     @Override
     public EmotionAnalysisResponseDTO getAnalysisById(Long id) {
@@ -50,6 +60,7 @@ public class EmotionAnalysisServiceImpl implements EmotionAnalysisService {
         return EmotionAnalysisResponseDTO.from(analysis);
     }
 
+    // 이거 바꾸기!
     @Override
     public List<EmotionAnalysisResponseDTO> getAllAnalysesByEntry(Long entryId) {
         EmotionEntry entry = entryRepository.findById(entryId)
@@ -61,12 +72,13 @@ public class EmotionAnalysisServiceImpl implements EmotionAnalysisService {
                 .collect(Collectors.toList());
     }
 
+    // 이거도!
     @Override
     public EmotionAnalysisResponseDTO updateAnalysis(Long id, EmotionAnalysisRequestDTO dto) {
         EmotionAnalysis analysis = analysisRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("감정 분석을 찾을 수 없습니다. ID: " + id));
 
-        EmotionEntry entry = analysis.getEmotionEntry(); // 연관 감정글
+        EmotionEntry entry = ownershipService.validateEntryOwnership(analysis.getEmotionEntry().getId()); // 분석에 들어갈 감정글
         String content = entry.getContent();
 
         // GPT 분석 호출
@@ -80,10 +92,10 @@ public class EmotionAnalysisServiceImpl implements EmotionAnalysisService {
         analysis.setEmotionSummary(result.get("emotionSummary").asText());
         analysis.setEmotionScore(result.get("emotionScore").asDouble());
 
-//        // 따뜻한 말도 업데이트할 수 있게 허용
-//        if (dto.getWarmMessages() != null && !dto.getWarmMessages().isEmpty()) {
-//            analysis.setWarmMessages(dto.getWarmMessages());
-//        }
+        // // 따뜻한 말도 업데이트할 수 있게 허용
+        // if (dto.getWarmMessages() != null && !dto.getWarmMessages().isEmpty()) {
+        // analysis.setWarmMessages(dto.getWarmMessages());
+        // }
 
         EmotionAnalysis updated = analysisRepository.save(analysis);
 
@@ -98,10 +110,10 @@ public class EmotionAnalysisServiceImpl implements EmotionAnalysisService {
         analysisRepository.deleteById(id);
     }
 
+    // 수정완!
     @Override
     public EmotionAnalysisResponseDTO createWarmMessages(Long entryId) {
-        EmotionEntry entry = entryRepository.findById(entryId)
-                .orElseThrow(() -> new EntityNotFoundException("분석 대상 감정 글이 존재하지 않습니다. ID: " + entryId));
+        EmotionEntry entry = ownershipService.validateEntryOwnership(entryId);
 
         // GPT에게 요청
         List<String> warmMessages = gptService.generateWarmMessages(entry.getContent());
@@ -126,12 +138,40 @@ public class EmotionAnalysisServiceImpl implements EmotionAnalysisService {
         return analysis.getWarmMessages();
     }
 
+    // 감정 점수 가져오기 (그래프)
+    // TODO : 구버전
+    // @Override
+    // public List<EmotionScoreDataDTO> getEmotionScoresByMember(Long memberId) {
+    // return analysisRepository.findEmotionScoresByMemberId(memberId);
+    // }
+
+    // TODO : 신버전
     @Override
-    public List<EmotionScoreDataDTO> getEmotionScoresByMember(Long memberId) {
-        return analysisRepository.findEmotionScoresByMemberId(memberId);
+    public List<EmotionScoreDataDTO> getEmotionScoresForMe() {
+        Long memberId = currentUserService.getCurrentMemberId();
+
+        Pageable pageable = PageRequest.of(0, 7); // 최신 7개
+        List<EmotionScoreDataDTO> scores = analysisRepository.findEmotionScoresByMemberId(memberId, pageable);
+
+        // 그래프용: 과거 → 현재
+        Collections.reverse(scores);
+
+        return scores;
     }
 
+    // 감정분석 최신데이터 1개 가져오기
+    // TODO : 구버전
+    @Override
     public Optional<EmotionAnalysisResponseDTO> getLatestAnalysis(Long memberId) {
+        return analysisRepository.findTopByEmotionEntry_Member_IdOrderByCreatedAtDesc(memberId)
+                .map(EmotionAnalysisResponseDTO::from);
+    }
+
+    // TODO : 신버전
+    @Override
+    public Optional<EmotionAnalysisResponseDTO> getLatestAnalysisForMe() {
+        Long memberId = currentUserService.getCurrentMemberId();
+
         return analysisRepository.findTopByEmotionEntry_Member_IdOrderByCreatedAtDesc(memberId)
                 .map(EmotionAnalysisResponseDTO::from);
     }

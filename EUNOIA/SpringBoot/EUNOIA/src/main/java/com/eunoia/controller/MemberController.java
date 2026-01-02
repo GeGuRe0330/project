@@ -2,6 +2,8 @@ package com.eunoia.controller;
 
 import com.eunoia.dto.MemberRequestDTO;
 import com.eunoia.dto.MemberResponseDTO;
+import com.eunoia.dto.authDTO.MemberSignupRequestDTO;
+import com.eunoia.dto.authDTO.MyInfoResponseDTO;
 import com.eunoia.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -46,4 +48,18 @@ public class MemberController {
         memberService.deleteMember(id);
         return ResponseEntity.noContent().build();
     }
+
+    // 이메일로 사용자의 정보를 세션에서 인증 후 받아오기
+    @GetMapping("/user/me")
+    public MyInfoResponseDTO me() {
+        return memberService.getMyInfo();
+    }
+
+    // 회원가입(신형)
+    @PostMapping("/signup")
+    public ResponseEntity<?> signup(@RequestBody MemberSignupRequestDTO dto) {
+        memberService.signup(dto);
+        return ResponseEntity.ok().build();
+    }
+
 }

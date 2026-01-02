@@ -9,6 +9,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 @RestController
 @RequestMapping("/api/analyses")
@@ -18,12 +20,12 @@ public class EmotionAnalysisController {
     private final EmotionAnalysisService analysisService;
 
     // 분석 생성 (감정 글 기준)
-//    @PostMapping("/{entryId}")
-//    public ResponseEntity<EmotionAnalysisResponseDTO> create(
-//            @PathVariable Long entryId,
-//            @RequestBody EmotionAnalysisRequestDTO dto) {
-//        return ResponseEntity.ok(analysisService.createAnalysis(entryId, dto));
-//    }
+    // @PostMapping("/{entryId}")
+    // public ResponseEntity<EmotionAnalysisResponseDTO> create(
+    // @PathVariable Long entryId,
+    // @RequestBody EmotionAnalysisRequestDTO dto) {
+    // return ResponseEntity.ok(analysisService.createAnalysis(entryId, dto));
+    // }
 
     // 분석 단건 조회
     @GetMapping("/{id}")
@@ -37,7 +39,7 @@ public class EmotionAnalysisController {
         return ResponseEntity.ok(analysisService.getAllAnalysesByEntry(entryId));
     }
 
-    // 분석 수정
+    // 분석 생성 & 수정
     @PutMapping("/{id}")
     public ResponseEntity<EmotionAnalysisResponseDTO> update(
             @PathVariable Long id,
@@ -64,11 +66,22 @@ public class EmotionAnalysisController {
         return ResponseEntity.ok(analysisService.getWarmMessagesByEntryId(entryId));
     }
 
-    @GetMapping("/scores/member/{memberId}")
-    public ResponseEntity<List<EmotionScoreDataDTO>> getEmotionScores(@PathVariable Long memberId) {
-        return ResponseEntity.ok(analysisService.getEmotionScoresByMember(memberId));
+    // 감정 점수 스코어 가져오기
+    // TODO : 구버전
+    // @GetMapping("/scores/member/{memberId}")
+    // public ResponseEntity<List<EmotionScoreDataDTO>>
+    // getEmotionScores(@PathVariable Long memberId) {
+    // return ResponseEntity.ok(analysisService.getEmotionScoresByMember(memberId));
+    // }
+
+    // TODO : 신버전
+    @GetMapping("/me/scores")
+    public ResponseEntity<List<EmotionScoreDataDTO>> getEmotionScoresForMe() {
+        return ResponseEntity.ok(analysisService.getEmotionScoresForMe());
     }
 
+    // 메인보드에서 조회되는 감정분석 1건 조회 요청
+    // TODO : 로그인 기반 전환 완료 후 제거 or 재설계 예정
     @GetMapping("/member/{memberId}/latest")
     public ResponseEntity<EmotionAnalysisResponseDTO> getLatestAnalysis(@PathVariable Long memberId) {
         return analysisService.getLatestAnalysis(memberId)
@@ -76,5 +89,12 @@ public class EmotionAnalysisController {
                 .orElse(ResponseEntity.noContent().build());
     }
 
+    // TODO : 분석 최신 단건 조회 로그인 버전 ( 완성 후 주석 삭제 예정 )
+    @GetMapping("me/latest")
+    public ResponseEntity<EmotionAnalysisResponseDTO> getLatestAnalysisForMe() {
+        return analysisService.getLatestAnalysisForMe()
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.noContent().build());
+    }
 
 }

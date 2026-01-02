@@ -17,11 +17,9 @@ public class EmotionEntryController {
     private final EmotionEntryService entryService;
 
     // 감정 글 등록
-    @PostMapping("/{memberId}")
-    public ResponseEntity<EmotionEntryResponseDTO> createEntry(
-            @PathVariable Long memberId,
-            @RequestBody EmotionEntryRequestDTO dto) {
-        return ResponseEntity.ok(entryService.createEmotionEntry(memberId, dto));
+    @PostMapping
+    public ResponseEntity<EmotionEntryResponseDTO> createEntry(@RequestBody EmotionEntryRequestDTO dto) {
+        return ResponseEntity.ok(entryService.createEmotionEntry(dto));
     }
 
     // 감정 글 단건 조회
