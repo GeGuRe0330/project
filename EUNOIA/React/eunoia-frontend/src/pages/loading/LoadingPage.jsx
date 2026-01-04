@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { getEmotionEntry, postAnalysis, updateAnalysis } from '../../api/EunoiaApi';
+import { getEmotionEntry, postWarmMessages, updateAnalysis } from '../../api/EunoiaApi';
 import { motion, AnimatePresence } from 'framer-motion';
 
 const LoadingPage = () => {
@@ -18,7 +18,7 @@ const LoadingPage = () => {
                 if (!entryId) throw new Error('entryId 없음');
 
                 const entry = await getEmotionEntry(entryId);
-                const warm = await postAnalysis(entryId, { content: entry.content });
+                const warm = await postWarmMessages(entryId, { content: entry.content });
 
                 // 콘솔 확인
                 console.log('[✅ GPT 응답]', warm);

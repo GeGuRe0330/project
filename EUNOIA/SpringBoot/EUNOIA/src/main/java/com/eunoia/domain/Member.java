@@ -29,13 +29,21 @@ public class Member {
     @Builder.Default
     private Role role = Role.USER;
 
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false, length = 20)
+    @Builder.Default
+    private Status status = Status.PENDING;
+
     @Column(nullable = false)
     private String nickname;
 
     private Integer age;
 
-    private String gender;
+    @Enumerated(EnumType.STRING)
+    @Column(length = 10)
+    private Gender gender;
 
+    @Column(nullable = false, updatable = false)
     private LocalDateTime createdAt;
 
     @PrePersist
@@ -45,5 +53,13 @@ public class Member {
 
     public enum Role {
         USER, ADMIN
+    }
+
+    public enum Status {
+        PENDING, ACTIVE, INACIVE
+    }
+
+    public enum Gender {
+        MALE, FEMALE, NONE
     }
 }

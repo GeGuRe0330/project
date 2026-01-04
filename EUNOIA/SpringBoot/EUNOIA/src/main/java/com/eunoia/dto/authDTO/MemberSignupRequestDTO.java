@@ -1,5 +1,7 @@
 package com.eunoia.dto.authDTO;
 
+import com.eunoia.domain.Member.Gender;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -16,5 +18,5 @@ public class MemberSignupRequestDTO {
     private String password;
     private String nickname;
     private Integer age;
-    private String gender;
+    private Gender gender;
 }

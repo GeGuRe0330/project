@@ -1,5 +1,7 @@
 package com.eunoia.dto;
 
+import com.eunoia.domain.Member.Gender;
+
 import lombok.*;
 
 @Getter
@@ -10,5 +12,5 @@ import lombok.*;
 public class MemberRequestDTO {
     private String nickname;
     private Integer age;
-    private String gender;
+    private Gender gender;
 }
