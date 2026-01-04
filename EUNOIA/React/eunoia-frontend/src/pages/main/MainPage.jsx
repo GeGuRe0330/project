@@ -8,14 +8,14 @@ const MainPage = () => {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
 
-    const memberId = 1; // 추후 인증 연동 시 동적 처리
+    // const memberId = 1; // 추후 인증 연동 시 동적 처리
 
     useEffect(() => {
         const fetchData = async () => {
             try {
                 const [latest, scores] = await Promise.all([
-                    getLatestAnalysis(memberId),
-                    getEmotionScores(memberId)
+                    getLatestAnalysis(),
+                    getEmotionScores()
                 ]);
                 setData(latest);
                 setScoreData(scores);

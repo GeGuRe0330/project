@@ -10,7 +10,7 @@ const EmotionWriteForm = () => {
         const today = new Date().toISOString().split('T')[0];
         return today;
     });
-    const memberId = 1; // 추후 로그인 연동 시 교체
+    // const memberId = 1; // 추후 로그인 연동 시 교체
 
     const [isLoading, setIsLoading] = useState(false);
 
@@ -19,7 +19,7 @@ const EmotionWriteForm = () => {
         setIsLoading(true);
 
         try {
-            const res = await postEmotionEntry(memberId, {
+            const res = await postEmotionEntry({
                 content,
                 emotionTag,
             });

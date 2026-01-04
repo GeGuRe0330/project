@@ -12,7 +12,7 @@ const IntroPage = () => {
         setFadeOut(true);
         setTimeout(() => {
             setShowIntro(false);
-            navigate('/dashboard');
+            navigate('/login');
         }, 2000); // 페이드아웃 후 이동 타이밍
     };
 

@@ -2,6 +2,7 @@ package com.eunoia.service;
 
 import com.eunoia.domain.Member;
 import com.eunoia.domain.Member.Role;
+import com.eunoia.domain.Member.Status;
 import com.eunoia.dto.MemberRequestDTO;
 import com.eunoia.dto.MemberResponseDTO;
 import com.eunoia.dto.authDTO.MemberSignupRequestDTO;
@@ -81,12 +82,13 @@ public class MemberServiceImpl implements MemberService {
         }
 
         Member member = Member.builder()
-                .email(dto.getEmail())
+                .email(dto.getEmail().trim().toLowerCase())
                 .password(passwordEncoder.encode(dto.getPassword()))
                 .nickname(dto.getNickname())
                 .age(dto.getAge())
                 .gender(dto.getGender())
                 .role(Role.USER)
+                .status(Status.PENDING)
                 .build();
 
         memberRepository.save(member);

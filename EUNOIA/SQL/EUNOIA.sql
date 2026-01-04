@@ -32,3 +32,12 @@ DELETE FROM EMOTION_ANALYSIS;
 
 -- 3. 감정 글 테이블 삭제
 DELETE FROM EMOTION_ENTRY;
+
+-- 승인 활성화
+UPDATE member
+SET status = 'ACTIVE'
+WHERE email = 'frog2@test.com';
+
+UPDATE member
+SET role = 'ADMIN'
+WHERE email = 'frog@test.com';
