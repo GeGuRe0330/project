@@ -1,4 +1,4 @@
-package com.eunoia.controller;
+package com.eunoia.controller.admin;
 
 import java.util.List;
 

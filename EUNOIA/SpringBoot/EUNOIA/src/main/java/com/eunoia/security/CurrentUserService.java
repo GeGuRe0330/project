@@ -4,10 +4,11 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import com.eunoia.common.error.CustomException;
+import com.eunoia.common.error.ErrorCode;
 import com.eunoia.domain.Member;
 import com.eunoia.repository.MemberRepository;
 
-import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -19,13 +20,13 @@ public class CurrentUserService {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 
         if (auth == null || !auth.isAuthenticated() || "anonymousUser".equals(auth.getPrincipal())) {
-            throw new IllegalStateException("로그인이 필요합니다.");
+            throw new CustomException(ErrorCode.AUTH_REQUIRED);
         }
 
         String email = auth.getName();
 
         return memberRepository.findByEmail(email)
-                .orElseThrow(() -> new EntityNotFoundException("회원을 찾을 수 없습니다. EMAIL: " + email));
+                .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND));
     }
 
     public Long getCurrentMemberId() {

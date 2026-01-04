@@ -1,5 +1,6 @@
 package com.eunoia.dto;
 
+import jakarta.validation.constraints.NotBlank;
 import lombok.*;
 
 @Getter
@@ -8,6 +9,7 @@ import lombok.*;
 @AllArgsConstructor
 @Builder
 public class EmotionEntryRequestDTO {
+    @NotBlank(message = "감정글은 필수입니다.")
     private String content;
     private String emotionTag;
     private String entryDate;
