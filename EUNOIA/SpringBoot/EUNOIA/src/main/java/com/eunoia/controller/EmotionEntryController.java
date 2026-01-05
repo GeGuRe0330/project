@@ -1,9 +1,9 @@
 package com.eunoia.controller;
 
 import com.eunoia.common.response.ApiResponse;
-import com.eunoia.dto.EmotionEntryRequestDTO;
-import com.eunoia.dto.EmotionEntryResponseDTO;
-import com.eunoia.service.EmotionEntryService;
+import com.eunoia.dto.emotionEntry.EmotionEntryRequestDTO;
+import com.eunoia.dto.emotionEntry.EmotionEntryResponseDTO;
+import com.eunoia.service.emotionEntry.EmotionEntryService;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;

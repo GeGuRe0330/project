@@ -1,4 +1,4 @@
-package com.eunoia.dto;
+package com.eunoia.dto.emotionEntry;
 
 import jakarta.validation.constraints.NotBlank;
 import lombok.*;

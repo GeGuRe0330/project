@@ -1,9 +1,9 @@
-package com.eunoia.service;
+package com.eunoia.service.emotionEntry;
 
 import com.eunoia.domain.EmotionEntry;
 import com.eunoia.domain.Member;
-import com.eunoia.dto.EmotionEntryRequestDTO;
-import com.eunoia.dto.EmotionEntryResponseDTO;
+import com.eunoia.dto.emotionEntry.EmotionEntryRequestDTO;
+import com.eunoia.dto.emotionEntry.EmotionEntryResponseDTO;
 import com.eunoia.repository.EmotionEntryRepository;
 import com.eunoia.security.CurrentUserService;
 import com.eunoia.security.OwnershipService;

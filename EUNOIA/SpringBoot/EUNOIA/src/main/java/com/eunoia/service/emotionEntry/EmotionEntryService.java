@@ -1,7 +1,7 @@
-package com.eunoia.service;
+package com.eunoia.service.emotionEntry;
 
-import com.eunoia.dto.EmotionEntryRequestDTO;
-import com.eunoia.dto.EmotionEntryResponseDTO;
+import com.eunoia.dto.emotionEntry.EmotionEntryRequestDTO;
+import com.eunoia.dto.emotionEntry.EmotionEntryResponseDTO;
 
 public interface EmotionEntryService {
     EmotionEntryResponseDTO createEmotionEntry(EmotionEntryRequestDTO dto);
