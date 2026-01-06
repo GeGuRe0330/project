@@ -18,6 +18,7 @@ public class MyInfoResponseDTO {
     private String email;
     private String nickname;
     private String role;
+    private String status;
 
     public static MyInfoResponseDTO from(Member member) {
         return MyInfoResponseDTO.builder()
@@ -25,6 +26,7 @@ public class MyInfoResponseDTO {
                 .email(member.getEmail())
                 .nickname(member.getNickname())
                 .role(member.getRole().name())
+                .status(member.getStatus().name())
                 .build();
     }
 }

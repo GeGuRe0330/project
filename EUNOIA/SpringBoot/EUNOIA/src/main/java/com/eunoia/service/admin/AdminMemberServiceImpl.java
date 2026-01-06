@@ -5,6 +5,8 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.eunoia.common.error.CustomException;
+import com.eunoia.common.error.ErrorCode;
 import com.eunoia.domain.Member;
 import com.eunoia.dto.admin.PendingMemberResponseDTO;
 import com.eunoia.repository.MemberRepository;
@@ -38,10 +40,10 @@ public class AdminMemberServiceImpl implements AdminMemberService {
     @Transactional
     public void approveMember(Long id) {
         Member member = memberRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 회원입니다. id=" + id));
+                .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND, "존재하지 않는 회원입니다."));
 
         if (member.getStatus() == Member.Status.ACTIVE) {
-            throw new IllegalStateException("이미 승인된 회원입니다.");
+            throw new CustomException(ErrorCode.INVALID_REQUEST, "이미 승인된 회원입니다.");
         }
 
         member.setStatus(Member.Status.ACTIVE);

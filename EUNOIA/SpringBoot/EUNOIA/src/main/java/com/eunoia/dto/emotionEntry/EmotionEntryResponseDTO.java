@@ -1,4 +1,4 @@
-package com.eunoia.dto;
+package com.eunoia.dto.emotionEntry;
 
 import com.eunoia.domain.EmotionEntry;
 import lombok.*;
