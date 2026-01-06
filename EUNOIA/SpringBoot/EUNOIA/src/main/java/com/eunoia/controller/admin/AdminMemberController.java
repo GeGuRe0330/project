@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.eunoia.common.response.ApiResponse;
 import com.eunoia.dto.admin.PendingMemberResponseDTO;
 import com.eunoia.service.admin.AdminMemberService;
 
@@ -22,14 +23,15 @@ public class AdminMemberController {
 
     // 승인대기 목록 조회
     @GetMapping("/pending")
-    public ResponseEntity<List<PendingMemberResponseDTO>> pendingMembers() {
-        return ResponseEntity.ok(adminMemberService.getPendingMembers());
+    public ResponseEntity<ApiResponse<List<PendingMemberResponseDTO>>> pendingMembers() {
+        List<PendingMemberResponseDTO> result = adminMemberService.getPendingMembers();
+        return ResponseEntity.ok(ApiResponse.success(result));
     }
 
     // 승인 처리
-    @PatchMapping("/{id}/approve")
-    public ResponseEntity<Void> approve(@PathVariable Long id) {
-        adminMemberService.approveMember(id);
-        return ResponseEntity.noContent().build();
+    @PatchMapping("/{memberId}/approve")
+    public ResponseEntity<ApiResponse<Void>> approve(@PathVariable Long memberId) {
+        adminMemberService.approveMember(memberId);
+        return ResponseEntity.ok(ApiResponse.success());
     }
 }

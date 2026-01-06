@@ -1,4 +1,4 @@
-package com.eunoia.dto;
+package com.eunoia.dto.emotionAnalysis;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
