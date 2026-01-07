@@ -22,5 +22,5 @@ export const login = async ({ username, password }) => {
 // 회원가입 요청
 export const signUp = async (payload) => {
     const res = await api.post(`${API_SERVER_HOST}/api/members/signup`, payload)
-    return res.data
+    return res.data.data;
 };

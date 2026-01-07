@@ -1,48 +1,39 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { approveMember, getPendingMembers } from '../../api/admin';
+import { useApiError } from '../../hooks/useApiError';
 
 const AdminPendingPage = () => {
     const navigate = useNavigate();
-
+    const { handleApiError } = useApiError();
     const [pending, setPending] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
     const [actionLoadingId, setActionLoadingId] = useState(null);
-    const [errorMsg, setErrorMsg] = useState('');
 
     const count = useMemo(() => pending.length, [pending]);
 
-    const fetchPending = async () => {
-        setErrorMsg('');
+    const fetchPending = useCallback(async () => {
         setIsLoading(true);
         try {
             const res = await getPendingMembers();
             setPending(res ?? []);
         } catch (err) {
-            const status = err?.response?.status;
-            if (status === 401) setErrorMsg('로그인이 필요합니다. 로그인 후 시도해주세요.');
-            else if (status === 403) setErrorMsg('관리자 권한이 없습니다. 로그인 후 시도해주세요.');
-            else setErrorMsg('대기 목록을 불러오지 못했습니다. 이는 서버문제일 수 있습니다.');
+            handleApiError(err);
+
         } finally {
             setIsLoading(false);
         }
-    };
+    }, [handleApiError]);
 
     const handleApprove = async (id) => {
         if (!id) return;
-        setErrorMsg('');
         setActionLoadingId(id);
 
         try {
             await approveMember(id);
             setPending((prev) => prev.filter((m) => m.id !== id));
         } catch (err) {
-            const message =
-                err?.response?.data?.message ||
-                (err?.response?.status === 403
-                    ? '관리자 권한이 없어요.'
-                    : '승인 처리에 실패했어요. 잠시 후 다시 시도해주세요.');
-            setErrorMsg(message);
+            handleApiError(err);
         } finally {
             setActionLoadingId(null);
         }
@@ -50,7 +41,7 @@ const AdminPendingPage = () => {
 
     useEffect(() => {
         fetchPending();
-    }, []);
+    }, [fetchPending]);
 
     return (
         <div className="min-h-screen w-full flex justify-center text-textPrimary font-sans">
@@ -80,13 +71,6 @@ const AdminPendingPage = () => {
                         </button>
                     </div>
                 </div>
-
-                {/* 에러 */}
-                {errorMsg && (
-                    <div className="mb-6 rounded-xl border border-black/10 bg-white/80 px-4 py-3 text-sm text-red-600">
-                        {errorMsg}
-                    </div>
-                )}
 
                 {/* 상태 */}
                 <div className="mb-4 flex items-center justify-between">

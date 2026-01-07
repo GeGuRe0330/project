@@ -1,16 +1,17 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { postEmotionEntry } from '../../api/EunoiaApi';
+import { useApiError } from '../../hooks/useApiError';
 
 const EmotionWriteForm = () => {
     const navigate = useNavigate();
     const [content, setContent] = useState('');
+    const { handleApiError } = useApiError();
     const [emotionTag, setEmotionTag] = useState('');
     const [entryDate, setEntryDate] = useState(() => {
         const today = new Date().toISOString().split('T')[0];
         return today;
     });
-    // const memberId = 1; // 추후 로그인 연동 시 교체
 
     const [isLoading, setIsLoading] = useState(false);
 
@@ -27,9 +28,8 @@ const EmotionWriteForm = () => {
             const entryId = res.id;
 
             navigate('/loading', { state: { entryId } });
-        } catch (error) {
-            console.error('저장 오류:', error);
-            alert('저장 중 오류가 발생했습니다.');
+        } catch (err) {
+            handleApiError(err);
         } finally {
             setIsLoading(false);
         }

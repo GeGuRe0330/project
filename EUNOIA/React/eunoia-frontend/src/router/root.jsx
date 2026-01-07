@@ -3,6 +3,8 @@ import { createBrowserRouter } from 'react-router-dom';
 import Layout from '../layout/Layout';
 import { API_SERVER_HOST } from '../api/defultApi';
 import { getMe } from '../api/authApi';
+import { useApiError } from '../hooks/useApiError';
+import { requireAuth } from '../utils/requireAuth';
 
 const IntroPage = lazy(() => import('../pages/intro/IntroPage'));
 const MainPage = lazy(() => import('../pages/main/MainPage'));
@@ -13,17 +15,6 @@ const LoginPage = lazy(() => import('../pages/login/LoginPage'));
 const SignupPage = lazy(() => import('../pages/signUp/SignupPage'));
 const AdminPendingPage = lazy(() => import('../pages/admin/AdminPendingPage'));
 
-// 로그인 가드
-const requireAuth = async () => {
-    try {
-        await getMe();
-        return null;
-    } catch (e) {
-        // 추후 login 컴포넌트 만든 후 대체 예정
-        window.location.href = `http://localhost:5173/login`;
-        return null;
-    }
-};
 
 const root = createBrowserRouter([
     {
