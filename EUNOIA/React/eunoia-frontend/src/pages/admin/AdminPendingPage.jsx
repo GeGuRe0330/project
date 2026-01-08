@@ -1,48 +1,39 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { approveMember, getPendingMembers } from '../../api/admin';
+import { useApiError } from '../../hooks/useApiError';
 
 const AdminPendingPage = () => {
     const navigate = useNavigate();
-
+    const { handleApiError } = useApiError();
     const [pending, setPending] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
     const [actionLoadingId, setActionLoadingId] = useState(null);
-    const [errorMsg, setErrorMsg] = useState('');
 
     const count = useMemo(() => pending.length, [pending]);
 
-    const fetchPending = async () => {
-        setErrorMsg('');
+    const fetchPending = useCallback(async () => {
         setIsLoading(true);
         try {
             const res = await getPendingMembers();
             setPending(res ?? []);
         } catch (err) {
-            const status = err?.response?.status;
-            if (status === 401) setErrorMsg('로그인이 필요합니다. 로그인 후 시도해주세요.');
-            else if (status === 403) setErrorMsg('관리자 권한이 없습니다. 로그인 후 시도해주세요.');
-            else setErrorMsg('대기 목록을 불러오지 못했습니다. 이는 서버문제일 수 있습니다.');
+            handleApiError(err);
+
         } finally {
             setIsLoading(false);
         }
-    };
+    }, [handleApiError]);
 
     const handleApprove = async (id) => {
         if (!id) return;
-        setErrorMsg('');
         setActionLoadingId(id);
 
         try {
             await approveMember(id);
             setPending((prev) => prev.filter((m) => m.id !== id));
         } catch (err) {
-            const message =
-                err?.response?.data?.message ||
-                (err?.response?.status === 403
-                    ? '관리자 권한이 없어요.'
-                    : '승인 처리에 실패했어요. 잠시 후 다시 시도해주세요.');
-            setErrorMsg(message);
+            handleApiError(err);
         } finally {
             setActionLoadingId(null);
         }
@@ -50,43 +41,37 @@ const AdminPendingPage = () => {
 
     useEffect(() => {
         fetchPending();
-    }, []);
+    }, [fetchPending]);
 
     return (
         <div className="min-h-screen w-full flex justify-center text-textPrimary font-sans">
-            <div className="w-full max-w-4xl px-6 py-10">
+            <div className="w-full max-w-4xl px-4 sm:px-6 py-6 sm:py-10">
                 {/* 헤더 */}
-                <div className="flex items-end justify-between gap-4 mb-8">
-                    <div>
+                <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4 mb-8">
+                    <div className="min-w-0">
                         <h1 className="text-3xl md:text-4xl font-handwriting">Admin · 승인 대기</h1>
                         <p className="text-sm text-gray-500 mt-2">
                             현재까지 승인 대기중인 회원 목록입니다.
                         </p>
                     </div>
 
-                    <div className="flex items-center gap-2">
+                    <div className="flex flex-wrap gap-2 sm:justify-end">
                         <button
                             onClick={fetchPending}
-                            className="rounded-xl border border-black/10 bg-white/70 px-4 py-2 text-sm hover:bg-white transition"
+                            className="w-full sm:w-auto rounded-xl border border-black/10 bg-white/70 px-4 py-2 text-sm hover:bg-white transition whitespace-nowrap"
                             disabled={isLoading}
                         >
                             새로고침
                         </button>
                         <button
                             onClick={() => navigate('/dashboard')}
-                            className="rounded-xl border border-black/10 bg-white/70 px-4 py-2 text-sm hover:bg-white transition"
+                            className="w-full sm:w-auto rounded-xl border border-black/10 bg-white/70 px-4 py-2 text-sm hover:bg-white transition whitespace-nowrap"
                         >
                             대시보드로
                         </button>
                     </div>
                 </div>
 
-                {/* 에러 */}
-                {errorMsg && (
-                    <div className="mb-6 rounded-xl border border-black/10 bg-white/80 px-4 py-3 text-sm text-red-600">
-                        {errorMsg}
-                    </div>
-                )}
 
                 {/* 상태 */}
                 <div className="mb-4 flex items-center justify-between">

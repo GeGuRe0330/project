@@ -3,26 +3,18 @@ import { motion } from 'framer-motion';
 import { Link, useNavigate } from 'react-router-dom';
 import { signUp } from '../../api/authApi';
 
-
-/**
- * SignupPage (UI 뼈대)
- * - LoginPage와 톤/레이아웃 통일
- * - 승인 플로우(관리자 승인) 대비: 가입 성공 후 /pending 이동 가능
- */
 const SignupPage = () => {
     const navigate = useNavigate();
 
-    // 폼 상태 (필드는 너 백엔드 DTO에 맞춰 조정하면 됨)
     const [form, setForm] = useState({
         email: '',
         password: '',
         passwordConfirm: '',
         nickname: '',
         age: '',
-        gender: '', // 'MALE' | 'FEMALE' | 'NONE'
+        gender: '',
     });
 
-    // UI 상태
     const [isLoading, setIsLoading] = useState(false);
     const [errorMsg, setErrorMsg] = useState('');
     const [successMsg, setSuccessMsg] = useState('');
@@ -33,12 +25,11 @@ const SignupPage = () => {
     };
 
     const validate = () => {
-        // if (!form.username.trim()) return '아이디를 입력해줘.';
-        if (!form.password) return '비밀번호를 입력해줘.';
-        if (form.password.length < 4) return '비밀번호는 4자 이상이면 좋아.';
-        if (form.password !== form.passwordConfirm) return '비밀번호 확인이 일치하지 않아.';
-        if (!form.email.trim()) return '이메일을 입력해줘.';
-        if (!form.nickname.trim()) return '닉네임(표시 이름)을 입력해줘.';
+        if (!form.nickname.trim()) return '닉네임(표시 이름)을 입력해주세요.';
+        if (!form.password) return '비밀번호를 입력해주세요.';
+        if (form.password.length < 4) return '비밀번호는 4자 이상이면 좋아요.';
+        if (form.password !== form.passwordConfirm) return '비밀번호 확인이 일치하지 않아요.';
+        if (!form.email.trim()) return '이메일을 입력해주세요.';
         return '';
     };
 
@@ -47,9 +38,10 @@ const SignupPage = () => {
         setErrorMsg('');
         setSuccessMsg('');
 
-        const msg = validate();
-        if (msg) {
-            setErrorMsg(msg);
+
+        const v = validate();
+        if (v) {
+            setErrorMsg(v);
             return;
         }
 
@@ -59,14 +51,10 @@ const SignupPage = () => {
             const { passwordConfirm, ...payload } = form;
             await signUp(payload);
 
-            // 우선은 가입 완료 후 로그인 페이지로
-            setSuccessMsg('가입 요청이 완료됐어. 관리자 승인 후 로그인할 수 있어!');
+            setSuccessMsg('가입 신청이 완료됐어요. 관리자 승인 후 로그인할 수 있어요!');
             setTimeout(() => navigate('/login'), 1200);
         } catch (err) {
-            // TODO: 백엔드 에러 메시지(중복 아이디/이메일 등) 파싱해서 보여주기
-            console.log(err?.response?.data?.message);
-            const message = err?.response?.data?.message || '로그인에 실패했어요. 잠시 후 다시 시도해주세요.';
-            setErrorMsg(message);
+            setErrorMsg(err?.message || '가입신청에 실패했어요...');
         } finally {
             setIsLoading(false);
         }

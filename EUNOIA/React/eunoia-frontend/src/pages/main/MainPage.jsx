@@ -8,8 +8,6 @@ const MainPage = () => {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
 
-    // const memberId = 1; // 추후 인증 연동 시 동적 처리
-
     useEffect(() => {
         const fetchData = async () => {
             try {
@@ -20,8 +18,7 @@ const MainPage = () => {
                 setData(latest);
                 setScoreData(scores);
             } catch (err) {
-                console.error(err);
-                setError("데이터를 불러오는 데 실패했습니다.");
+                setError(err.message);
             } finally {
                 setLoading(false);
             }

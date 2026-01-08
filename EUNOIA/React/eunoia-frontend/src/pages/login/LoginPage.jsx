@@ -31,8 +31,7 @@ const LoginPage = () => {
             await login({ username: form.username, password: form.password });
             navigate('/dashboard');
         } catch (err) {
-            console.log(err.response.data.code)
-            const message = err?.response?.data?.message || '로그인에 실패했어요. 잠시 후 다시 시도해주세요.';
+            const message = err.message || '로그인에 실패했어요. 잠시 후 다시 시도해주세요.';
             setErrorMsg(message);
         } finally {
             setIsLoading(false);

@@ -1,40 +1,85 @@
-// src/components/SidebarNav.jsx
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation } from "react-router-dom";
 
-const SidebarNav = () => {
+const navItems = [
+    { to: "/dashboard", label: "감정 대시보드" },
+    { to: "/write", label: "감정 기록하기" },
+    { to: "/about", label: "EUNOIA에 대해" },
+];
+
+const SidebarNav = ({ me, onLogout }) => {
     const location = useLocation();
 
-    const isActive = (path) => location.pathname === path;
+    // ✅ 하위 경로까지 active 처리하고 싶으면 startsWith 추천
+    const isActive = (path) => location.pathname === path || location.pathname.startsWith(path);
+
+    const adminItems =
+        me?.role === "ADMIN"
+            ? [{ to: "/pendinglist", label: "관리자 승인" }]
+            : [];
+
+    const linkClass = (active) =>
+        [
+            "px-3 py-2 rounded-lg transition-all",
+            "hover:bg-white/40",
+            active
+                ? "bg-white/60 font-semibold border-l-4 border-primary-dark"
+                : "text-gray-800",
+        ].join(" ");
 
     return (
-        <aside className="fixed top-0 left-0 h-full w-52 bg-primary-light text-gray-800 shadow-md p-6 font-handwriting z-50">
-            <div className="mb-10 text-2xl font-bold">
+        <aside className="fixed top-0 left-0 h-full w-52 bg-primary-light text-gray-800 shadow-md p-6 font-handwriting z-50 flex flex-col">
+            {/* Logo */}
+            <div className="mb-6 text-2xl font-bold">
                 <span className="text-primary-dark">EUNOIA</span>
             </div>
 
-            <nav className="flex flex-col gap-4">
-                <Link
-                    to="/dashboard"
-                    className={`hover:text-primary-dark transition-all ${isActive('/') ? 'font-bold underline' : ''
-                        }`}
-                >
-                    감정 대시보드
-                </Link>
-                <Link
-                    to="/write"
-                    className={`hover:text-primary-dark transition-all ${isActive('/write') ? 'font-bold underline' : ''
-                        }`}
-                >
-                    감정 기록하기
-                </Link>
-                <Link
-                    to="/insight"
-                    className={`hover:text-primary-dark transition-all ${isActive('/insight') ? 'font-bold underline' : ''
-                        }`}
-                >
-                    GPT 통찰
-                </Link>
+            {/* User box */}
+            <div className="mb-6 rounded-lg bg-white/40 p-3 text-sm text-center">
+                <div className="font-semibold">
+                    {me?.nickname ? `${me.nickname} 님` : "반가워요!"}
+                </div>
+                <div className="text-gray-600 truncate">{me?.email}</div>
+
+                {me?.role === "ADMIN" && (
+                    <div className="mt-2 inline-block rounded-md bg-primary-dark/90 px-2 py-0.5 text-xs font-semibold">
+                        ADMIN
+                    </div>
+                )}
+            </div>
+
+            {/* 상단 메뉴 영역 */}
+            <nav className="flex flex-col gap-2 flex-1">
+                {navItems.map((item) => (
+                    <Link key={item.to} to={item.to} className={linkClass(isActive(item.to))}>
+                        {item.label}
+                    </Link>
+                ))}
             </nav>
+
+            {/* 하단 섹션: 관리자 메뉴 + 로그아웃 */}
+            <div className="pt-4 mt-4">
+                {adminItems.length > 0 && (
+                    <div className="flex flex-col gap-2 mb-4">
+                        {adminItems.map((item) => (
+                            <Link
+                                key={item.to}
+                                to={item.to}
+                                className={linkClass(isActive(item.to))}
+                            >
+                                {item.label}
+                            </Link>
+                        ))}
+                    </div>
+                )}
+
+                <button
+                    type="button"
+                    onClick={onLogout}
+                    className="w-full rounded-lg bg-white/50 hover:bg-white/70 transition-all px-3 py-2 text-sm font-semibold"
+                >
+                    로그아웃
+                </button>
+            </div>
         </aside>
     );
 };

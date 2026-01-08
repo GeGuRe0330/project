@@ -2,48 +2,59 @@ import { useEffect, useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { getEmotionEntry, postWarmMessages, updateAnalysis } from '../../api/EunoiaApi';
 import { motion, AnimatePresence } from 'framer-motion';
+import { useApiError } from '../../hooks/useApiError';
 
 const LoadingPage = () => {
     const navigate = useNavigate();
     const location = useLocation();
+    const { handleApiError } = useApiError();
     const entryId = location.state?.entryId;
 
     const [warmMessages, setWarmMessages] = useState([]);
     const [visibleIndex, setVisibleIndex] = useState(0);
 
+    // 체류 시간 (초)
+    const MIN_STAY_MS = 30_000;
+
     // 분석 실행
     useEffect(() => {
-        const runAnalysis = async () => {
-            try {
-                if (!entryId) throw new Error('entryId 없음');
+        let cancelled = false;
 
+        const minStay = new Promise((resolve) => setTimeout(resolve, MIN_STAY_MS));
+
+        const run = async () => {
+            try {
+                if (!entryId) throw new Error("entryId 없음");
+
+                // 1) 분석 실행
                 const entry = await getEmotionEntry(entryId);
                 const warm = await postWarmMessages(entryId, { content: entry.content });
+                await updateAnalysis(entryId);
 
-                // 콘솔 확인
-                console.log('[✅ GPT 응답]', warm);
-
-                await updateAnalysis(warm.id);
-
-                if (!Array.isArray(warm.warmMessages)) {
-                    throw new Error('warmMessages 형식 오류');
+                if (!cancelled) {
+                    setWarmMessages(warm.warmMessages);
+                    setVisibleIndex(0);
                 }
 
-                setWarmMessages(warm.warmMessages);
-                setVisibleIndex(0);
+                await minStay;
 
+                if (!cancelled) {
+                    navigate("/dashboard", { replace: true });
+                }
             } catch (err) {
-                console.error('GPT 분석 오류:', err);
-                alert('감정 분석 중 문제가 발생했어요 😢');
-                navigate('/dashboard');
+                if (!cancelled) {
+                    handleApiError(err);
+                }
             }
         };
 
-        runAnalysis();
+        run();
 
-        const timer = setTimeout(() => navigate('/dashboard'), 30000); // fallback 이동
-        return () => clearTimeout(timer);
-    }, [entryId, navigate]);
+        return () => {
+            cancelled = true;
+        };
+    }, [entryId, handleApiError, navigate]);
+
 
     // 메시지 순차 전환
     useEffect(() => {
