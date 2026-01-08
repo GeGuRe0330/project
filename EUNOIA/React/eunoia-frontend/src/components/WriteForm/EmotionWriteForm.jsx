@@ -40,8 +40,20 @@ const EmotionWriteForm = () => {
             <h2 className="text-xl font-bold">📝 감정 일기 쓰기</h2>
 
             <textarea
-                className="w-full p-3 border rounded-lg"
-                rows={6}
+                className="
+                            w-full
+                            p-4
+                            border border-black/10
+                            rounded-xl
+                            bg-white/70
+                            text-sm md:text-base
+                            leading-relaxed
+                            resize-none
+                            min-h-[180px] md:min-h-[260px]
+                            focus:outline-none
+                            focus:ring-2 focus:ring-primary-dark/30
+                            transition
+                            "
                 placeholder="오늘의 감정을 자유롭게 적어보세요..."
                 value={content}
                 onChange={(e) => setContent(e.target.value)}

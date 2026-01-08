@@ -8,8 +8,6 @@ const MainPage = () => {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
 
-    // const memberId = 1; // 추후 인증 연동 시 동적 처리
-
     useEffect(() => {
         const fetchData = async () => {
             try {

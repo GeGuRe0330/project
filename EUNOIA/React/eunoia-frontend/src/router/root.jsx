@@ -9,12 +9,11 @@ import { requireAuth } from '../utils/requireAuth';
 const IntroPage = lazy(() => import('../pages/intro/IntroPage'));
 const MainPage = lazy(() => import('../pages/main/MainPage'));
 const WritePage = lazy(() => import('../pages/write/writePage'));
-const InsightPage = lazy(() => import('../pages/insight/InsightPage'));
+const AboutPage = lazy(() => import('../pages/about/AboutPage'));
 const LoadingPage = lazy(() => import('../pages/loading/LoadingPage'));
 const LoginPage = lazy(() => import('../pages/login/LoginPage'));
 const SignupPage = lazy(() => import('../pages/signUp/SignupPage'));
 const AdminPendingPage = lazy(() => import('../pages/admin/AdminPendingPage'));
-
 
 const root = createBrowserRouter([
     {
@@ -69,11 +68,11 @@ const root = createBrowserRouter([
                 )
             },
             {
-                path: 'insight',
+                path: 'about',
                 loader: requireAuth,
                 element: (
                     <Suspense fallback={<div>Loading...</div>}>
-                        <InsightPage />
+                        <AboutPage />
                     </Suspense>
                 )
             },
