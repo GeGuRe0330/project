@@ -48,7 +48,7 @@ const LoginPage = () => {
                     transition={{ duration: 0.6 }}
                     className="text-center mb-8"
                 >
-                    <h1 className="text-5xl md:text-6xl font-handwriting mb-3">EUNOIA</h1>
+                    <h1 className="text-5xl md:text-6xl font-serif mb-3">EUNOIA</h1>
                     <p className="text-sm md:text-base text-gray-500">
                         다시 돌아온 당신을 환영합니다.
                     </p>

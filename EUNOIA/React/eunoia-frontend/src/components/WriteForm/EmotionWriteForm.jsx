@@ -46,7 +46,7 @@ const EmotionWriteForm = () => {
                             border border-black/10
                             rounded-xl
                             bg-white/70
-                            text-sm md:text-base
+                            text-base md:text-lg
                             leading-relaxed
                             resize-none
                             min-h-[180px] md:min-h-[260px]

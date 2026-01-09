@@ -30,7 +30,7 @@ const IntroPage = () => {
                             animate={{ opacity: fadeOut ? 0 : 1 }}
                             exit={{ opacity: 0 }}
                             transition={{ delay: 0.8, duration: 1 }}
-                            className="text-6xl md:text-7xl font-handwriting mb-6"
+                            className="font-serif text-6xl md:text-7xl mb-6"
                         >
                             EUNOIA
                         </motion.h1>

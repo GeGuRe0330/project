@@ -24,8 +24,8 @@ export default {
         textSecondary: "#7F5539",
       },
       fontFamily: {
-        sans: ['"Noto Sans KR"', "sans-serif"],
-        handwriting: ['"DungGeunMo"', "cursive"], // 감성 손글씨 느낌
+        sans: ['"Noto Sans KR"', '"Inter"', "sans-serif"],
+        serif: ['"Cormorant Garamond"', "serif"],
       },
     },
   },

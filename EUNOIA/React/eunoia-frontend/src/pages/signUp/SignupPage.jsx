@@ -70,7 +70,7 @@ const SignupPage = () => {
                     transition={{ duration: 0.6 }}
                     className="text-center mb-8"
                 >
-                    <h1 className="text-5xl md:text-6xl font-handwriting mb-3">EUNOIA</h1>
+                    <h1 className="text-5xl md:text-6xl font-serif mb-3">EUNOIA</h1>
                     <p className="text-sm md:text-base text-gray-500">
                         나를 이해할 수 있는 거울. EUNOIA
                     </p>

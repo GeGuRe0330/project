@@ -3,13 +3,12 @@ import { Link, useLocation } from "react-router-dom";
 const navItems = [
     { to: "/dashboard", label: "감정 대시보드" },
     { to: "/write", label: "감정 기록하기" },
-    { to: "/about", label: "EUNOIA에 대해" },
+    { to: "/about", label: "유노이아란?" },
 ];
 
 const SidebarNav = ({ me, onLogout }) => {
     const location = useLocation();
 
-    // ✅ 하위 경로까지 active 처리하고 싶으면 startsWith 추천
     const isActive = (path) => location.pathname === path || location.pathname.startsWith(path);
 
     const adminItems =
@@ -29,8 +28,8 @@ const SidebarNav = ({ me, onLogout }) => {
     return (
         <aside className="fixed top-0 left-0 h-full w-52 bg-primary-light text-gray-800 shadow-md p-6 font-handwriting z-50 flex flex-col">
             {/* Logo */}
-            <div className="mb-6 text-2xl font-bold">
-                <span className="text-primary-dark">EUNOIA</span>
+            <div className="mb-6 text-2xl font-bold text-center">
+                <span className="font-serif text-primary-dark">EUNOIA</span>
             </div>
 
             {/* User box */}
@@ -38,17 +37,17 @@ const SidebarNav = ({ me, onLogout }) => {
                 <div className="font-semibold">
                     {me?.nickname ? `${me.nickname} 님` : "반가워요!"}
                 </div>
-                <div className="text-gray-600 truncate">{me?.email}</div>
+                <div className="text-gray-600 truncate font-serif">{me?.email}</div>
 
                 {me?.role === "ADMIN" && (
-                    <div className="mt-2 inline-block rounded-md bg-primary-dark/90 px-2 py-0.5 text-xs font-semibold">
+                    <div className="mt-2 inline-block rounded-md bg-primary-dark/90 px-2 py-0.5 text-xs font-semibold font-serif">
                         ADMIN
                     </div>
                 )}
             </div>
 
             {/* 상단 메뉴 영역 */}
-            <nav className="flex flex-col gap-2 flex-1">
+            <nav className="flex flex-col gap-2 flex-1 ">
                 {navItems.map((item) => (
                     <Link key={item.to} to={item.to} className={linkClass(isActive(item.to))}>
                         {item.label}

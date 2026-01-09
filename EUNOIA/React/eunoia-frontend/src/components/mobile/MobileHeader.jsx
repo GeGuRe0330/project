@@ -4,7 +4,7 @@ const MobileHeader = ({ onOpen }) => {
         <header className="md:hidden fixed top-0 left-0 right-0 z-50">
             <div className="mx-auto max-w-4xl px-4 pt-3">
                 <div className="rounded-2xl bg-surface/90 backdrop-blur shadow-sm border border-white/40 px-4 py-3 flex items-center justify-between">
-                    <div className="font-handwriting text-lg font-bold text-primary-dark">
+                    <div className="font-serif text-lg font-bold text-primary-dark">
                         EUNOIA
                     </div>
 

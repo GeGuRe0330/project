@@ -4,7 +4,7 @@ import { Link, useLocation } from "react-router-dom";
 const navItems = [
     { to: "/dashboard", label: "감정 대시보드" },
     { to: "/write", label: "감정 기록하기" },
-    { to: "/about", label: "EUNOIA에 대해" },
+    { to: "/about", label: "유노이아란?" },
 ];
 
 const MobileDrawer = ({ open, onClose, me, onLogout }) => {
@@ -25,7 +25,7 @@ const MobileDrawer = ({ open, onClose, me, onLogout }) => {
                 : "text-gray-800",
         ].join(" ");
 
-    // ✅ open일 때 스크롤 방지(모바일 UX)
+    // open일 때 스크롤 방지(모바일 UX)
     useEffect(() => {
         if (!open) return;
         const prev = document.body.style.overflow;
@@ -50,7 +50,7 @@ const MobileDrawer = ({ open, onClose, me, onLogout }) => {
             <aside className="absolute top-0 right-0 h-full w-72 bg-primary-light shadow-2xl p-6 font-handwriting">
                 {/* 상단 */}
                 <div className="flex items-center justify-between">
-                    <div className="text-xl font-bold text-primary-dark">EUNOIA</div>
+                    <div className="text-xl font-bold text-primary-dark font-serif">EUNOIA</div>
                     <button
                         type="button"
                         onClick={onClose}
@@ -63,13 +63,13 @@ const MobileDrawer = ({ open, onClose, me, onLogout }) => {
 
                 {/* 유저 박스 */}
                 <div className="mt-6 rounded-2xl bg-white/45 p-4 text-center">
-                    <div className="font-semibold text-textPrimary">
+                    <div className="font-sans font-semibold text-textPrimary">
                         {me?.nickname ? `${me.nickname} 님` : "반가워요!"}
                     </div>
-                    <div className="mt-1 text-sm text-textSecondary truncate">{me?.email}</div>
+                    <div className="font-serif mt-1 text-sm text-textSecondary truncate">{me?.email}</div>
 
                     {me?.role === "ADMIN" && (
-                        <div className="mt-2 inline-block rounded-md bg-primary-dark/90 px-2 py-0.5 text-xs font-semibold text-white">
+                        <div className="font-serif mt-2 inline-block rounded-md bg-primary-dark/90 px-2 py-0.5 text-xs font-semibold text-white">
                             ADMIN
                         </div>
                     )}
