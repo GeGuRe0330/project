@@ -1,7 +1,7 @@
-import { api, API_SERVER_HOST } from './defultApi';
+import { api } from "./defultApi";
 
 // 감정 분석 API prefix
-const ANALYSIS_PREFIX = `${API_SERVER_HOST}/api/analyses`;
+const ANALYSIS_PREFIX = "/analyses";
 
 // 최신 감정 분석 1건 조회
 export const getLatestAnalysis = async () => {
@@ -15,15 +15,15 @@ export const getEmotionScores = async () => {
     return res.data.data;
 };
 
-// 감정글 저장 (예: /api/emotion-entry)
+// 감정글 저장 
 export const postEmotionEntry = async (entryObj) => {
-    const res = await api.post(`/api/emotion-entries`, entryObj);
+    const res = await api.post(`/emotion-entries`, entryObj);
     return res.data.data;
 };
 
 // 감정글 조회
 export const getEmotionEntry = async (entryId) => {
-    const res = await api.get(`/api/emotion-entries/${entryId}`);
+    const res = await api.get(`/emotion-entries/${entryId}`);
     return res.data.data;
 };
 

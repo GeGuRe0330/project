@@ -5,7 +5,7 @@
 /* global.css */
 body {
     background-color: #FAF3E0;
-    background-image: url('../public/images/paper-texture.png');
+    background-image: url('/images/paper-texture.png');
     background-size: auto;
     /* background-repeat: repeat; */
     /* background-attachment: fixed; */

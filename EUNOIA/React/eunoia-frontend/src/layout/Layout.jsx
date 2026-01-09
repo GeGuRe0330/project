@@ -27,7 +27,7 @@ const Layout = () => {
 
     const handleLogout = async () => {
         try {
-            await api.post("/logout");
+            await api.post("/auth/logout");
             setMe(null);
             navigate("/login");
         } catch (e) {

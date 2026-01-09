@@ -1,9 +1,6 @@
 import { lazy, Suspense } from 'react';
 import { createBrowserRouter } from 'react-router-dom';
 import Layout from '../layout/Layout';
-import { API_SERVER_HOST } from '../api/defultApi';
-import { getMe } from '../api/authApi';
-import { useApiError } from '../hooks/useApiError';
 import { requireAuth } from '../utils/requireAuth';
 
 const IntroPage = lazy(() => import('../pages/intro/IntroPage'));
