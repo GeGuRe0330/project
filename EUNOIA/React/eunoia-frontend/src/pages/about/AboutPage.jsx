@@ -10,7 +10,7 @@ const AboutPage = () => {
                     <section className="rounded-2xl bg-surface/70 shadow-sm p-6 md:p-8">
                         <p className="text-sm text-textSecondary mb-2">제작자</p>
 
-                        <div className="rounded-2xl bg-white/45 shadow-sm p-5 md:p-6">
+                        <div className="rounded-2xl bg-white/45 shadow-sm p-5 md:p-6 border-2 border-primary-dark/40">
                             <div className="flex items-center gap-4">
                                 <img
                                     src={profileImg}
@@ -51,7 +51,7 @@ const AboutPage = () => {
                                     href="https://github.com/GeGuRe0330"
                                     target="_blank"
                                     rel="noreferrer"
-                                    className="inline-flex items-center justify-center rounded-xl bg-primary/50 hover:bg-primary-dark/30 transition px-4 py-2 text-sm font-semibold"
+                                    className="inline-flex items-center justify-center rounded-xl bg-primary/50 hover:bg-primary-dark/30 transition px-4 py-2 text-sm font-semibold shadow-sm border-[1px] border-primary/70"
                                 >
                                     GitHub
                                 </a>
@@ -59,7 +59,7 @@ const AboutPage = () => {
                                     href="https://www.instagram.com/little_woojin0330?igsh=NG5hb2xsM2s5ODQ%3D&utm_source=qr"
                                     target="_blank"
                                     rel="noreferrer"
-                                    className="inline-flex items-center justify-center rounded-xl bg-primary/50 hover:bg-primary-dark/30 transition px-4 py-2 text-sm font-semibold"
+                                    className="inline-flex items-center justify-center rounded-xl bg-primary/50 hover:bg-primary-dark/30 transition px-4 py-2 text-sm font-semibol shadow-sm border-[1px] border-primary/70"
                                 >
                                     Instagram
                                 </a>
@@ -117,7 +117,7 @@ const AboutPage = () => {
                         <h2 className="text-xl font-bold text-textPrimary">어떻게 흐름을 만들까?</h2>
 
                         <div className="mt-5 grid grid-cols-1 md:grid-cols-2 gap-4">
-                            <div className="rounded-xl bg-white/40 p-5">
+                            <div className="rounded-xl bg-white/40 p-5 border-2 border-primary-dark/40">
                                 <p className="text-xs font-semibold text-textSecondary">STEP 1</p>
                                 <h3 className="mt-1 font-bold text-textPrimary">글을 씁니다</h3>
                                 <p className="mt-2 text-sm leading-relaxed text-textSecondary">
@@ -126,7 +126,7 @@ const AboutPage = () => {
                                 </p>
                             </div>
 
-                            <div className="rounded-xl bg-white/40 p-5">
+                            <div className="rounded-xl bg-white/40 p-5 border-2 border-primary-dark/40">
                                 <p className="text-xs font-semibold text-textSecondary">STEP 2</p>
                                 <h3 className="mt-1 font-bold text-textPrimary">감정이 쌓입니다</h3>
                                 <p className="mt-2 text-sm leading-relaxed text-textSecondary">
@@ -135,7 +135,7 @@ const AboutPage = () => {
                                 </p>
                             </div>
 
-                            <div className="rounded-xl bg-white/40 p-5">
+                            <div className="rounded-xl bg-white/40 p-5 border-2 border-primary-dark/40">
                                 <p className="text-xs font-semibold text-textSecondary">STEP 3</p>
                                 <h3 className="mt-1 font-bold text-textPrimary">나를 마주합니다</h3>
                                 <p className="mt-2 text-sm leading-relaxed text-textSecondary">
@@ -144,7 +144,7 @@ const AboutPage = () => {
                                 </p>
                             </div>
 
-                            <div className="rounded-xl bg-white/40 p-5">
+                            <div className="rounded-xl bg-white/40 p-5 border-2 border-primary-dark/40">
                                 <p className="text-xs font-semibold text-textSecondary">STEP 4</p>
                                 <h3 className="mt-1 font-bold text-textPrimary">흐름으로 이해합니다</h3>
                                 <p className="mt-2 text-sm leading-relaxed text-textSecondary">

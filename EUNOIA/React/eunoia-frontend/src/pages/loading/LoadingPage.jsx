@@ -14,7 +14,7 @@ const LoadingPage = () => {
     const [visibleIndex, setVisibleIndex] = useState(0);
 
     // 체류 시간 (초)
-    const MIN_STAY_MS = 30_000;
+    const MIN_STAY_MS = 18_500;
 
     // 분석 실행
     useEffect(() => {

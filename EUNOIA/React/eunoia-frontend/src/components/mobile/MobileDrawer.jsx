@@ -5,7 +5,7 @@ const navItems = [
     { to: "/dashboard", label: "감정 대시보드" },
     { to: "/write", label: "감정 기록하기" },
     { to: "/about", label: "유노이아란?" },
-    { to: "/roadmap", label: "개발로드맵" },
+    { to: "/roadmap", label: "개발 로드맵" },
 ];
 
 const MobileDrawer = ({ open, onClose, me, onLogout }) => {
@@ -55,7 +55,7 @@ const MobileDrawer = ({ open, onClose, me, onLogout }) => {
                     <button
                         type="button"
                         onClick={onClose}
-                        className="rounded-xl bg-white/50 hover:bg-white/70 transition px-3 py-2 text-sm font-semibold"
+                        className="rounded-xl bg-white/50 hover:bg-white/70 transition px-3 py-2 text-sm font-semibold shadow-sm border-[1px] border-primary/70"
                         aria-label="메뉴 닫기"
                     >
                         ✕
@@ -63,7 +63,7 @@ const MobileDrawer = ({ open, onClose, me, onLogout }) => {
                 </div>
 
                 {/* 유저 박스 */}
-                <div className="mt-6 rounded-2xl bg-white/45 p-4 text-center">
+                <div className="mt-6 rounded-2xl bg-white/45 p-4 text-center border-2 border-primary-dark/40">
                     <div className="font-sans font-semibold text-textPrimary">
                         {me?.nickname ? `${me.nickname} 님` : "반가워요!"}
                     </div>
@@ -113,7 +113,7 @@ const MobileDrawer = ({ open, onClose, me, onLogout }) => {
                             onClose();
                             onLogout();
                         }}
-                        className="w-full rounded-xl bg-white/50 hover:bg-white/70 transition px-4 py-3 text-sm font-semibold"
+                        className="w-full rounded-xl bg-white/50 hover:bg-white/70 transition px-4 py-3 text-sm font-semibold border-2 border-primary-dark/40"
                     >
                         로그아웃
                     </button>

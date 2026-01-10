@@ -1,10 +1,10 @@
 import { useEffect, useState } from 'react';
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
+import { XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, AreaChart, Area } from 'recharts';
 
 function formatDate(isoString) {
     const date = new Date(isoString);
-    const month = (date.getMonth() + 1).toString().padStart(2, '0'); // 월
-    const day = date.getDate().toString().padStart(2, '0');          // 일
+    const month = (date.getMonth() + 1).toString().padStart(2, '0');
+    const day = date.getDate().toString().padStart(2, '0');
     return `${month}/${day}`;
 }
 function useIsMobile(breakpoint = 640) {
@@ -31,7 +31,7 @@ const EmotionScoreChart = ({ data }) => {
 
     const formattedData = data.map(item => ({
         ...item,
-        createdAt: formatDate(item.createdAt),
+        createdAt: item.createdAt,
         score: item.emotionScore
     }));
 
@@ -45,31 +45,40 @@ const EmotionScoreChart = ({ data }) => {
             {/* 차트 영역: 남은 공간을 전부 차지 */}
             <div className="flex-1 min-h-[180px]">
                 <ResponsiveContainer width="100%" height="100%">
-                    <LineChart data={formattedData}
-                        margin={{ top: 0, right: 20, left: 10, bottom: 0 }}>
-                        <CartesianGrid strokeDasharray="10 5" />
-                        <XAxis dataKey="createdAt"
-                            interval={isMobile ? 1 : 0}
-                            height={30}
-                        />
+                    <AreaChart
+                        data={formattedData}
+                        margin={{ top: 6, right: 20, left: 10, bottom: 0 }}
+                    >
+                        <defs>
+                            <linearGradient id="eunoiaFill" x1="0" y1="0" x2="0" y2="1">
+                                <stop offset="5%" stopColor="#E6CFC1" stopOpacity={0.55} />
+                                <stop offset="95%" stopColor="#E6CFC1" stopOpacity={0.05} />
+                            </linearGradient>
+                        </defs>
+
+                        <CartesianGrid strokeDasharray="10 5" stroke="rgba(92, 58, 33, 0.10)" />
+
+                        <XAxis dataKey="createdAt" interval={isMobile ? 1 : 0} height={30} tickFormatter={(iso) => formatDate(iso)} />
+
                         <YAxis
                             domain={[0, 100]}
                             ticks={[0, 25, 50, 75, 100]}
-                            tickFormatter={(value) => {
-                                const labels = { 25: "😰", 75: "😌" };
-                                return labels[value] || "";
-                            }}
+                            tickFormatter={(v) => ({ 25: "😰", 75: "😌" }[v] || "")}
                             width={22}
                         />
-                        <Tooltip />
-                        <Line
+
+                        <Tooltip labelFormatter={(iso) => formatDate(iso)} />
+
+                        <Area
                             type="monotone"
                             dataKey="score"
-                            stroke="#4DABF7"
+                            stroke="#B08968"
                             strokeWidth={2}
+                            fill="url(#eunoiaFill)"
                             dot={{ r: isMobile ? 3 : 4 }}
+                            activeDot={{ r: isMobile ? 4 : 6 }}
                         />
-                    </LineChart>
+                    </AreaChart>
                 </ResponsiveContainer>
             </div>
         </div>

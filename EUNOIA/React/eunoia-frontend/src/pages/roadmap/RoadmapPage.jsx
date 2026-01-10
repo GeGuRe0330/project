@@ -1,6 +1,6 @@
 import CardMotion from "../../components/motion/CardMotion";
 
-// 선택) 뱃지 UI를 깔끔하게 쓰려고 작은 컴포넌트로 분리
+// 뱃지 컴포넌트
 const Badge = ({ children, tone = "primary" }) => {
     const toneMap = {
         primary: "bg-primary-dark/90",
@@ -13,7 +13,7 @@ const Badge = ({ children, tone = "primary" }) => {
 
     return (
         <span
-            className={`inline-flex items-center rounded-lg px-2 py-1 text-xs font-semibold ${toneMap[tone] || toneMap.primary}`}
+            className={`inline-flex items-center rounded-lg px-2 py-1 text-xs font-semibold shadow-sm border-[1px] border-primary/70 ${toneMap[tone] || toneMap.primary}`}
         >
             {children}
         </span>
@@ -37,6 +37,10 @@ const RoadmapPage = () => {
             items: [
                 "히스토리 & 개발 현황을 알 수 있는 로드맵 페이지 추가",
                 "로그인 페이지에서 새로고침 시 스프링 로그인 페이지로 리다이렉팅 되던 현상 수정",
+                "분석 로직을 소폭 개선하여 분석시간 단축",
+                "감정 차트의 비정상적인 점수 출력 문제 수정",
+                "감정 차트 디자인 수정",
+                "UI디자인 소폭 수정",
                 "모바일 환경에서 영어 폰트가 깨지는 현상 수정",
                 "모바일 환경( 아이폰 사파리 )에서 감정글 작성 시 화면이 줌인 되는 현상 수정",
                 "회원가입 성공 시 너무 빨리 로그인 페이지로 리다이렉팅 되는 현상 수정",
@@ -73,19 +77,19 @@ const RoadmapPage = () => {
 
     const issues = [
         {
-            title: "DB시퀀스 동기화문제",
-            desc: "테이블마다 각각 존재하는 시퀀스가 동일하게 처리되는 문제",
+            title: "UI개선",
+            desc: "기본적인 성능테스트 기간동안 세부적인 UI를 다듬고있어요.\n 좀 더 예쁜 모습으로 찾아올게요!",
             severity: "warn",
-            hint: "JPA테이블간 조인관계에서 발생한 것으로 간주됨.\nJPA 엔티티 수정 중.",
+            hint: "세부적인 디테일 요소 추가 작업 중",
         },
         {
-            title: "감정점수 차트의 비정상적인 작동",
-            desc: "DB시퀀스 동기화문제로 야기된 문제.\n차트 자체는 정상동작하나 내부 점수데이터의 손실.",
-            severity: "ok",
-            hint: "DB시퀀스 동기화문제 해결 후 추가 작업 예정.",
+            title: "백엔드 DB저장 시간이 한국시간과 다른 현상",
+            desc: "관련해서 감정 분석 점수 차트에 날짜가 실제 분석 시간과 차이가 생기는 현상.",
+            severity: "",
+            hint: "현재 확인 관찰 단계.",
         },
         {
-            title: "간헐적 로딩 지연 체감",
+            title: "간헐적 로딩 지연",
             desc: "설계 의도를 넘어서는 지연 현상이 간헐적으로 발견되는 문제.",
             severity: "",
             hint: "현재 확인 관찰 단계.",
@@ -98,7 +102,7 @@ const RoadmapPage = () => {
             title: "다음 업데이트 (예정)",
             items: [
                 "배포에 따른 로직 안정화",
-                "UI개선(버튼 색감, 카드 보더 등), 감정그래프 디자인",
+                "UI개선",
                 "모바일 환경 UX 보강",
             ],
         },
@@ -114,8 +118,11 @@ const RoadmapPage = () => {
     const backlog = [
         "출석/성장 시스템(새싹 → 나무 컨셉)",
         "테마 토글(감성/코드 느낌) 확장",
-        "마음병편지(익명 롤링페이퍼)",
+        "마음유리병편지(익명 롤링페이퍼)",
         "심리테스트",
+        "치킨🍗",
+        "피자🍕",
+        "UI개선",
     ];
 
     return (
@@ -130,7 +137,7 @@ const RoadmapPage = () => {
                             EUNOIA 업데이트 & 히스토리
                         </h1>
 
-                        <div className="mt-4 rounded-2xl bg-white/45 shadow-sm p-5 md:p-6">
+                        <div className="mt-4 rounded-2xl bg-white/45 shadow-sm p-5 md:p-6 border-2 border-primary-dark/40">
                             <div className="flex flex-wrap items-center gap-2">
                                 <Badge tone="ok">{meta.status}</Badge>
                                 <Badge tone="neutral">{meta.version}</Badge>
@@ -159,7 +166,7 @@ const RoadmapPage = () => {
                         <div className="mt-2 max-h-[420px] md:max-h-[520px] overflow-y-auto pr-2">
                             <div className="space-y-4">
                                 {updates.map((u) => (
-                                    <div key={`${u.date}-${u.version}`} className="rounded-2xl bg-white/40 p-5">
+                                    <div key={`${u.date}-${u.version}`} className="rounded-2xl bg-white/40 p-5 border-2 border-primary-dark/40">
                                         {/* 상단 메타 정보 */}
                                         <div className="md:flex md:items-center gap-2">
                                             <div className="flex flex-wrap items-center gap-2">
@@ -196,7 +203,7 @@ const RoadmapPage = () => {
 
                         <div className="mt-4 grid grid-cols-1  gap-4">
                             {issues.map((i, idx) => (
-                                <div key={idx} className="rounded-2xl bg-surface/60 shadow-sm p-6">
+                                <div key={idx} className="rounded-2xl bg-surface/60 shadow-sm p-6 border-2 border-primary-dark/40">
                                     <div className="flex items-center justify-between gap-3">
                                         <h2 className="text-lg font-bold text-textPrimary">{i.title}</h2>
                                     </div>
@@ -214,7 +221,7 @@ const RoadmapPage = () => {
                                         {i.desc}
                                     </p>
 
-                                    <div className="mt-4 rounded-xl bg-white/35 p-4">
+                                    <div className="mt-4 rounded-xl bg-white/80 p-4 border-[1px] border-primary-dark/20">
                                         <p className="text-xs font-semibold text-textSecondary">작업현황</p>
                                         <p className="mt-1 text-sm leading-relaxed text-textSecondary whitespace-pre-line">{i.hint}</p>
                                     </div>
@@ -231,7 +238,7 @@ const RoadmapPage = () => {
 
                         <div className="mt-4 space-y-4">
                             {roadmap.map((r, idx) => (
-                                <div key={idx} className="rounded-2xl bg-white/40 p-5">
+                                <div key={idx} className="rounded-2xl bg-white/40 p-5 border-2 border-primary-dark/40">
                                     <div className="flex flex-wrap items-center gap-2">
                                         <Badge tone="secondary">{r.quarter}</Badge>
                                         <h2 className="text-lg font-bold text-textPrimary">{r.title}</h2>
@@ -250,10 +257,10 @@ const RoadmapPage = () => {
 
                 {/* 4) 아이디어 백로그 */}
                 <CardMotion index={4}>
-                    <section className="mt-6 rounded-2xl bg-surface/70 shadow-sm p-6 md:p-8">
+                    <section className="mt-6 rounded-2xl bg-surface/70 shadow-sm p-6 md:p-8 ">
                         <p className="text-sm text-textSecondary mb-2">아이디어 백로그</p>
 
-                        <div className="mt-4 rounded-2xl bg-white/40 p-5">
+                        <div className="mt-4 rounded-2xl bg-white/40 p-5 border-2 border-primary-dark/40">
                             <p className="text-sm md:text-base leading-relaxed text-textSecondary">
                                 현재 개발자의 머릿속
                             </p>
@@ -273,8 +280,8 @@ const RoadmapPage = () => {
                 <CardMotion index={5}>
                     <section className="mt-6 rounded-2xl bg-surface/70 shadow-sm p-6 md:p-8">
                         <h2 className="text-lg font-bold text-textPrimary">개발자의 마음</h2>
-                        <p className="mt-3 text-sm md:text-base leading-relaxed text-textSecondary">
-                            궁극적으로 여러분들과 함께 만드는 EUNOIA가 제 목표이기에 사용하시면서 개선점이나 새로운 아이디어는 언제든 제시해주신다면 적극 반영하겠습니다.
+                        <p className="mt-3 text-sm md:text-base leading-relaxed text-textSecondary whitespace-pre-line">
+                            {"궁극적으로 여러분들과 함께 만드는 EUNOIA가 제 목표입니다.\n 사용하시면서 개선점이나 새로운 아이디어는 언제든 제시해주신다면 적극 반영할게요!"}
                         </p>
                         <p className="mt-4 text-xs text-textSecondary">© EUNOIA · 지리산개구리</p>
                     </section>

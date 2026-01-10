@@ -4,7 +4,7 @@ const navItems = [
     { to: "/dashboard", label: "감정 대시보드" },
     { to: "/write", label: "감정 기록하기" },
     { to: "/about", label: "유노이아란?" },
-    { to: "/roadmap", label: "개발로드맵" },
+    { to: "/roadmap", label: "개발 로드맵" },
 ];
 
 const SidebarNav = ({ me, onLogout }) => {
@@ -34,7 +34,7 @@ const SidebarNav = ({ me, onLogout }) => {
             </div>
 
             {/* User box */}
-            <div className="mb-6 rounded-lg bg-white/40 p-3 text-sm text-center">
+            <div className="mb-6 rounded-lg bg-white/40 p-3 text-sm text-center border-2 border-primary-dark/40">
                 <div className="font-semibold">
                     {me?.nickname ? `${me.nickname} 님` : "반가워요!"}
                 </div>
@@ -75,7 +75,7 @@ const SidebarNav = ({ me, onLogout }) => {
                 <button
                     type="button"
                     onClick={onLogout}
-                    className="w-full rounded-lg bg-white/50 hover:bg-white/70 transition-all px-3 py-2 text-sm font-semibold"
+                    className="w-full rounded-lg bg-white/50 hover:bg-white/70 transition-all px-3 py-2 text-sm font-semibold border-2 border-primary-dark/40"
                 >
                     로그아웃
                 </button>
