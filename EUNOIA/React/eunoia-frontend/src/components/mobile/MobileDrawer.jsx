@@ -5,6 +5,7 @@ const navItems = [
     { to: "/dashboard", label: "감정 대시보드" },
     { to: "/write", label: "감정 기록하기" },
     { to: "/about", label: "유노이아란?" },
+    { to: "/roadmap", label: "개발로드맵" },
 ];
 
 const MobileDrawer = ({ open, onClose, me, onLogout }) => {

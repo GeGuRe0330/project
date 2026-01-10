@@ -11,6 +11,7 @@ const LoadingPage = lazy(() => import('../pages/loading/LoadingPage'));
 const LoginPage = lazy(() => import('../pages/login/LoginPage'));
 const SignupPage = lazy(() => import('../pages/signUp/SignupPage'));
 const AdminPendingPage = lazy(() => import('../pages/admin/AdminPendingPage'));
+const RoadmapPage = lazy(() => import('../pages/roadmap/RoadmapPage'));
 
 const root = createBrowserRouter([
     {
@@ -74,18 +75,30 @@ const root = createBrowserRouter([
                 )
             },
             {
+                path: 'roadmap',
+                loader: requireAuth,
+                element: (
+                    <Suspense fallback={<div>Loading...</div>}>
+                        <RoadmapPage />
+                    </Suspense>
+                )
+            },
+            {
+                path: 'loading',
+                loader: requireAuth,
+                element: (
+                    <LoadingPage />
+                )
+            },
+
+            // Admin
+            {
                 path: 'pendinglist',
                 loader: requireAuth,
                 element: (
                     <Suspense fallback={<div>Loading...</div>}>
                         <AdminPendingPage />
                     </Suspense>
-                )
-            },
-            {
-                path: 'loading',
-                element: (
-                    <LoadingPage />
                 )
             },
         ],

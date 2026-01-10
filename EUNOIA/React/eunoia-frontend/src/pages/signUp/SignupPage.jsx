@@ -52,7 +52,7 @@ const SignupPage = () => {
             await signUp(payload);
 
             setSuccessMsg('가입 신청이 완료됐어요. 관리자 승인 후 로그인할 수 있어요!');
-            setTimeout(() => navigate('/login'), 1200);
+            setTimeout(() => navigate('/login'), 2600);
         } catch (err) {
             setErrorMsg(err?.message || '가입신청에 실패했어요...');
         } finally {
