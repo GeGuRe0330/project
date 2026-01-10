@@ -73,16 +73,22 @@ const RoadmapPage = () => {
 
     const issues = [
         {
-            title: "UI 개선",
-            desc: "카드들이 너무 안보여...",
+            title: "DB시퀀스 동기화문제",
+            desc: "테이블마다 각각 존재하는 시퀀스가 동일하게 처리되는 문제",
             severity: "warn",
-            hint: "보더를 추가할까??",
+            hint: "JPA테이블간 조인관계에서 발생한 것으로 간주됨.\nJPA 엔티티 수정 중.",
+        },
+        {
+            title: "감정점수 차트의 비정상적인 작동",
+            desc: "DB시퀀스 동기화문제로 야기된 문제.\n차트 자체는 정상동작하나 내부 점수데이터의 손실.",
+            severity: "ok",
+            hint: "DB시퀀스 동기화문제 해결 후 추가 작업 예정.",
         },
         {
             title: "간헐적 로딩 지연 체감",
-            desc: "분석 요청 시 네트워크/서버 상태에 따라 로딩이 길어질 수 있음.",
-            severity: "ok",
-            hint: "api 통신 로직을 개선중이에요",
+            desc: "설계 의도를 넘어서는 지연 현상이 간헐적으로 발견되는 문제.",
+            severity: "",
+            hint: "현재 확인 관찰 단계.",
         },
     ];
 
@@ -198,19 +204,19 @@ const RoadmapPage = () => {
                                         {i.severity === "warn"
                                             ? "작업중"
                                             : i.severity === "danger"
-                                                ? "긴급"
+                                                ? "긴급수정중"
                                                 : i.severity === "ok"
-                                                    ? "현상파악중"
-                                                    : "관찰"}
+                                                    ? "작업대기중"
+                                                    : "원인파악중"}
                                     </Badge>
 
-                                    <p className="mt-3 text-sm md:text-base leading-relaxed text-textSecondary">
+                                    <p className="mt-3 text-sm md:text-base leading-relaxed text-textSecondary whitespace-pre-line">
                                         {i.desc}
                                     </p>
 
                                     <div className="mt-4 rounded-xl bg-white/35 p-4">
                                         <p className="text-xs font-semibold text-textSecondary">작업현황</p>
-                                        <p className="mt-1 text-sm leading-relaxed text-textSecondary">{i.hint}</p>
+                                        <p className="mt-1 text-sm leading-relaxed text-textSecondary whitespace-pre-line">{i.hint}</p>
                                     </div>
                                 </div>
                             ))}
