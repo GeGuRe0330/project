@@ -20,8 +20,8 @@ commit;
 
 select * from user_tables;
 select * from member;
-select * from EMOTION_ENTRY;
-select * from EMOTION_ANALYSIS;
+select * from EMOTION_ENTRY order by created_at desc;
+select * from EMOTION_ANALYSIS order by created_at desc;
 select * from ANALYSIS_WARM_MESSAGE;
 
 -- 1. 따뜻한 말 테이블 먼저 삭제 (가장 종속된 테이블)

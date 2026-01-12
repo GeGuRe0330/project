@@ -59,7 +59,7 @@ const AboutPage = () => {
                                     href="https://www.instagram.com/little_woojin0330?igsh=NG5hb2xsM2s5ODQ%3D&utm_source=qr"
                                     target="_blank"
                                     rel="noreferrer"
-                                    className="inline-flex items-center justify-center rounded-xl bg-primary/50 hover:bg-primary-dark/30 transition px-4 py-2 text-sm font-semibol shadow-sm border-[1px] border-primary/70"
+                                    className="inline-flex items-center justify-center rounded-xl bg-primary/50 hover:bg-primary-dark/30 transition px-4 py-2 text-sm font-semibold shadow-sm border-[1px] border-primary/70"
                                 >
                                     Instagram
                                 </a>

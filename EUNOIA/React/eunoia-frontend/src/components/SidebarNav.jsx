@@ -27,7 +27,7 @@ const SidebarNav = ({ me, onLogout }) => {
         ].join(" ");
 
     return (
-        <aside className="fixed top-0 left-0 h-full w-52 bg-primary-light text-gray-800 shadow-md p-6 font-handwriting z-50 flex flex-col">
+        <aside className="fixed top-0 left-0 h-full w-52 bg-primary-light text-gray-800 shadow-md p-6 font-sans z-50 flex flex-col">
             {/* Logo */}
             <div className="mb-6 text-2xl font-bold text-center">
                 <span className="font-serif text-primary-dark">EUNOIA</span>

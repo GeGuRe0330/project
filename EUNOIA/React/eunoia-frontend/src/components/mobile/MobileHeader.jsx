@@ -11,7 +11,7 @@ const MobileHeader = ({ onOpen }) => {
                     <button
                         type="button"
                         onClick={onOpen}
-                        className="rounded-xl bg-white/50 hover:bg-white/70 transition px-3 py-2 text-sm font-semibold"
+                        className="rounded-xl transition px-3 py-2 text-base font-semibold"
                         aria-label="메뉴 열기"
                     >
                         ☰

@@ -68,7 +68,7 @@ const LoadingPage = () => {
     }, [warmMessages]);
 
     return (
-        <div className="flex flex-col items-center justify-center h-screen bg-[#fdfaf6] text-gray-800">
+        <div className="flex flex-col items-center justify-center h-screen bg-[#fdfaf6] text-gray-800 rounded-xl">
             {/* 분석 문구 */}
             <div className="text-xl md:text-2xl font-semibold mb-4">
                 EUNOIA가 당신의 글을 읽고 있어요...

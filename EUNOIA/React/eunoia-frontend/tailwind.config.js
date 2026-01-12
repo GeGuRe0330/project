@@ -26,6 +26,7 @@ export default {
       fontFamily: {
         sans: ['"Noto Sans KR"', '"Inter"', "sans-serif"],
         serif: ['"Cormorant Garamond"', "serif"],
+        handwriting: ["NanumNaMuJeongWeon", "serif"],
       },
     },
   },

@@ -43,7 +43,7 @@ const EmotionScoreChart = ({ data }) => {
             </h2>
 
             {/* 차트 영역: 남은 공간을 전부 차지 */}
-            <div className="flex-1 min-h-[180px]">
+            <div className="flex-1 min-h-auto">
                 <ResponsiveContainer width="100%" height="100%">
                     <AreaChart
                         data={formattedData}

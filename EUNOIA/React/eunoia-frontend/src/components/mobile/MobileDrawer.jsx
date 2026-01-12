@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 
 const navItems = [
@@ -8,25 +8,59 @@ const navItems = [
     { to: "/roadmap", label: "개발 로드맵" },
 ];
 
+const ANIM_MS = 650;
+
 const MobileDrawer = ({ open, onClose, me, onLogout }) => {
     const location = useLocation();
+
+    // DOM 유지
+    const [mounted, setMounted] = useState(open);
+    // 애니메이션 상태(열림/닫힘)
+    const [visible, setVisible] = useState(false);
 
     const isActive = (path) =>
         location.pathname === path || location.pathname.startsWith(path);
 
-    const adminItems =
-        me?.role === "ADMIN" ? [{ to: "/pendinglist", label: "관리자 승인" }] : [];
+    const adminItems = useMemo(
+        () => (me?.role === "ADMIN" ? [{ to: "/pendinglist", label: "관리자 승인" }] : []),
+        [me?.role]
+    );
 
     const linkClass = (active) =>
         [
-            "px-4 py-3 rounded-xl transition-all text-base",
+            "px-4 py-3 rounded-xl text-base",
+            "transition-all duration-200",
             "hover:bg-white/40",
             active
                 ? "bg-white/60 font-semibold border-l-4 border-primary-dark"
                 : "text-gray-800",
+            visible ? "translate-x-0 opacity-100" : "translate-x-4 opacity-0",
         ].join(" ");
 
-    // open일 때 스크롤 방지(모바일 UX)
+    // open -> mounted/visible 제어
+    useEffect(() => {
+        if (open) {
+            setMounted(true);
+            setVisible(false);
+
+            // 미리 닫아둔 체로 렌더하고 안전핀으로 2프레임 미리 렌더
+            const raf1 = requestAnimationFrame(() => {
+                const raf2 = requestAnimationFrame(() => {
+                    setVisible(true);
+                });
+                return () => cancelAnimationFrame(raf2);
+            });
+
+            return () => cancelAnimationFrame(raf1);
+        }
+
+        setVisible(false);
+        const t = setTimeout(() => setMounted(false), ANIM_MS);
+        return () => clearTimeout(t);
+    }, [open]);
+
+
+    // 스크롤 잠금은 open 기준(원래대로 유지)
     useEffect(() => {
         if (!open) return;
         const prev = document.body.style.overflow;
@@ -36,19 +70,44 @@ const MobileDrawer = ({ open, onClose, me, onLogout }) => {
         };
     }, [open]);
 
-    if (!open) return null;
+    // ESC 닫기 (테블릿PC의 경우)
+    useEffect(() => {
+        if (!open) return;
+        const onKeyDown = (e) => {
+            if (e.key === "Escape") onClose();
+        };
+        window.addEventListener("keydown", onKeyDown);
+        return () => window.removeEventListener("keydown", onKeyDown);
+    }, [open, onClose]);
+
+    if (!mounted) return null;
 
     return (
         <div className="md:hidden fixed inset-0 z-50">
             {/* Dim */}
             <div
-                className="absolute inset-0 bg-black/30"
+                className={`
+          absolute inset-0 bg-black/30
+          transition-opacity duration-650
+          ${visible ? "opacity-100" : "opacity-0"}
+        `}
                 onClick={onClose}
                 aria-hidden="true"
             />
 
             {/* Panel */}
-            <aside className="absolute top-0 right-0 h-full w-72 bg-primary-light shadow-2xl p-6 font-handwriting">
+            <aside
+                className={`
+          absolute top-0 right-0 h-full w-72
+          bg-primary-light shadow-2xl p-6 font-handwriting
+          transform transition-transform duration-650
+          ease-[cubic-bezier(0.22,1,0.36,1)]
+          ${visible ? "translate-x-0" : "translate-x-full"}
+        `}
+                role="dialog"
+                aria-modal="true"
+                aria-label="모바일 네비게이션"
+            >
                 {/* 상단 */}
                 <div className="flex items-center justify-between">
                     <div className="text-xl font-bold text-primary-dark font-serif">EUNOIA</div>
@@ -67,7 +126,9 @@ const MobileDrawer = ({ open, onClose, me, onLogout }) => {
                     <div className="font-sans font-semibold text-textPrimary">
                         {me?.nickname ? `${me.nickname} 님` : "반가워요!"}
                     </div>
-                    <div className="font-serif mt-1 text-sm text-textSecondary truncate">{me?.email}</div>
+                    <div className="font-serif mt-1 text-sm text-textSecondary truncate">
+                        {me?.email}
+                    </div>
 
                     {me?.role === "ADMIN" && (
                         <div className="font-serif mt-2 inline-block rounded-md bg-primary-dark/90 px-2 py-0.5 text-xs font-semibold text-white">
@@ -77,29 +138,35 @@ const MobileDrawer = ({ open, onClose, me, onLogout }) => {
                 </div>
 
                 {/* 메뉴 */}
-                <nav className="mt-6 flex flex-col gap-2">
-                    {navItems.map((item) => (
+                <nav className="mt-6 flex flex-col gap-2 font-sans">
+                    {navItems.map((item, idx) => (
                         <Link
                             key={item.to}
                             to={item.to}
                             onClick={onClose}
                             className={linkClass(isActive(item.to))}
+                            style={{ transitionDelay: visible ? `${idx * 85}ms` : "0ms" }}
                         >
                             {item.label}
                         </Link>
                     ))}
                 </nav>
 
-                {/* 하단: 관리자 + 로그아웃 */}
+                {/* 하단 */}
                 <div className="mt-6 pt-4 border-t border-white/40">
                     {adminItems.length > 0 && (
-                        <div className="flex flex-col gap-2 mb-4">
-                            {adminItems.map((item) => (
+                        <div className="flex flex-col gap-2 mb-4 font-sans">
+                            {adminItems.map((item, idx) => (
                                 <Link
                                     key={item.to}
                                     to={item.to}
                                     onClick={onClose}
                                     className={linkClass(isActive(item.to))}
+                                    style={{
+                                        transitionDelay: visible
+                                            ? `${(navItems.length + idx) * 85}ms`
+                                            : "0ms",
+                                    }}
                                 >
                                     {item.label}
                                 </Link>
@@ -113,7 +180,7 @@ const MobileDrawer = ({ open, onClose, me, onLogout }) => {
                             onClose();
                             onLogout();
                         }}
-                        className="w-full rounded-xl bg-white/50 hover:bg-white/70 transition px-4 py-3 text-sm font-semibold border-2 border-primary-dark/40"
+                        className="w-full rounded-xl bg-white/50 hover:bg-white/70 transition px-4 py-3 text-sm font-sans border-2 border-primary-dark/40"
                     >
                         로그아웃
                     </button>
