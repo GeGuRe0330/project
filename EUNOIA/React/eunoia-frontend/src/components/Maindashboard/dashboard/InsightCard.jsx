@@ -77,7 +77,7 @@ const InsightCard = ({ insight }) => {
                     style={{ fontFamily: "'Dancing Script', cursive" }}
                 >
                     {/* 본문: 블라인드 뒤 */}
-                    <span className="mt-2 text-textSecondary whitespace-pre-line font-handwriting text-base md:text-xl opacity-90">
+                    <span className="mt-2 text-textSecondary whitespace-pre-line font-handwriting text-base md:text-xl opacity-90 font-semibold">
                         {formatBySentence(insight)}
                     </span>
 
