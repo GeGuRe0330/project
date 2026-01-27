@@ -38,7 +38,7 @@ const MainDashboard = ({ data, scoreDate }) => {
                 </div>
             </CardMotion>
 
-            {/* 4) EUNOIA가 당신에게 해주고 싶은 말 (모바일 4th / 데스크탑 좌측 하단) */}
+            {/* 4) 지금의 감정을 비춰보는 말 (모바일 4th / 데스크탑 좌측 하단) */}
             <CardMotion index={3} className="order-4 h-full md:col-start-1">
                 <div className="h-full">
                     <WarmMessageCard messages={data.warmMessages} />
