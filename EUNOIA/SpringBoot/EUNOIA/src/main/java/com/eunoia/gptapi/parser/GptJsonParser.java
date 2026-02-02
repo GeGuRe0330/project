@@ -70,7 +70,41 @@ public class GptJsonParser {
                     """;
             return objectMapper.readTree(fallback);
         } catch (Exception ignored) {
-            return null; // 여기까지 오면 정말 예외적이긴 함
+            return null;
         }
     }
+
+    // meta 분석 전용 폴벡 JSON
+    private JsonNode fallbackMetaFailureJson() {
+        try {
+            String fallback = """
+                    {
+                      "outer": {
+                        "summary": "아직 충분한 흐름을 읽기 어려워요.",
+                        "keywords": [],
+                        "emotionFlows": [],
+                        "copingPatterns": [],
+                        "strengthSignals": [],
+                        "sensitivePoints": []
+                      },
+                      "inner": {
+                        "summary": "",
+                        "values": [],
+                        "needs": [],
+                        "innerMotivations": []
+                      },
+                      "clarity": {
+                        "clarityScore": 0,
+                        "clarityReasons": ["기록 수가 충분하지 않아요."],
+                        "notVisibleYet": [],
+                        "nextActions": ["조금 더 기록이 쌓이면 다시 살펴볼 수 있어요."]
+                      }
+                    }
+                    """;
+            return objectMapper.readTree(fallback);
+        } catch (Exception ignored) {
+            return null;
+        }
+    }
+
 }

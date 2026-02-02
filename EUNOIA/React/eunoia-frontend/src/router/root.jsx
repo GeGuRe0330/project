@@ -12,6 +12,7 @@ const LoginPage = lazy(() => import('../pages/login/LoginPage'));
 const SignupPage = lazy(() => import('../pages/signUp/SignupPage'));
 const AdminPendingPage = lazy(() => import('../pages/admin/AdminPendingPage'));
 const RoadmapPage = lazy(() => import('../pages/roadmap/RoadmapPage'));
+const MetaAnalysisPage = lazy(() => import('../pages/meta/MetaAnalysisPage'));
 
 const root = createBrowserRouter([
     {
@@ -88,6 +89,13 @@ const root = createBrowserRouter([
                 loader: requireAuth,
                 element: (
                     <LoadingPage />
+                )
+            },
+            {
+                path: 'MetaAnalysisPage',
+                loader: requireAuth,
+                element: (
+                    <MetaAnalysisPage />
                 )
             },
 

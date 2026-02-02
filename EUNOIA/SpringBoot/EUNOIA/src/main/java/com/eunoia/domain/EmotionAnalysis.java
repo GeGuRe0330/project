@@ -13,12 +13,7 @@ import java.util.List;
 @AllArgsConstructor
 @Builder
 @Table(name = "emotion_analysis")
-@SequenceGenerator(
-        name = "emotion_analysis_seq_generator",
-        sequenceName = "emotion_analysis_seq",
-        allocationSize = 1,
-        initialValue = 1
-)
+@SequenceGenerator(name = "emotion_analysis_seq_generator", sequenceName = "emotion_analysis_seq", allocationSize = 1, initialValue = 1)
 public class EmotionAnalysis {
 
     @Id
@@ -59,4 +54,10 @@ public class EmotionAnalysis {
     protected void onCreate() {
         this.createdAt = LocalDateTime.now();
     }
+
+    @Column(name = "entry_clarity_score")
+    private Integer entryClarityScore;
+
+    @Column(name = "entry_clarity_reason", length = 4000)
+    private String entryClarityReason;
 }

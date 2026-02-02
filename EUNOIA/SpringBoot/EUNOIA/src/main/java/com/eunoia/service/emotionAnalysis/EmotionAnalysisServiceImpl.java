@@ -52,16 +52,17 @@ public class EmotionAnalysisServiceImpl implements EmotionAnalysisService {
         // GPT 분석 호출
         JsonNode result = gptService.analyzeEmotion(entry.getContent());
 
-        // GPT 응답 파싱 및 반영
-        analysis.setEmotionDetected(result.get("emotionDetected").asText());
-        analysis.setKeywords(result.get("keywords").asText());
-        analysis.setInsightSummary(result.get("insightSummary").asText());
-        analysis.setFlowHint(result.get("flowHint").asText());
-        analysis.setEmotionSummary(result.get("emotionSummary").asText());
-        analysis.setEmotionScore(result.get("emotionScore").asDouble());
+        // GPT 응답 파싱 및 반영 (path() + 기본값)
+        analysis.setEmotionDetected(result.path("emotionDetected").asText(""));
+        analysis.setKeywords(result.path("keywords").asText(""));
+        analysis.setInsightSummary(result.path("insightSummary").asText(""));
+        analysis.setFlowHint(result.path("flowHint").asText(""));
+        analysis.setEmotionSummary(result.path("emotionSummary").asText(""));
+        analysis.setEmotionScore(result.path("emotionScore").asDouble(50.0));
+        analysis.setEntryClarityScore(result.path("entryClarityScore").asInt(0));
+        analysis.setEntryClarityReason(result.path("entryClarityReason").asText(""));
 
         EmotionAnalysis updated = analysisRepository.save(analysis);
-
         return EmotionAnalysisResponseDTO.from(updated);
     }
 

@@ -29,4 +29,10 @@ public class GPTService {
     String rawResponse = gptClient.call(prompt);
     return jsonParser.parse(rawResponse);
   }
+
+  public JsonNode analyzeMeta(String metaInput) {
+    String prompt = promptFactory.metaAnalysis(metaInput);
+    String rawResponse = gptClient.call(prompt);
+    return jsonParser.parse(rawResponse);
+  }
 }
