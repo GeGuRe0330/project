@@ -26,22 +26,19 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
 
                 .authorizeHttpRequests(auth -> auth
-                        // 인증 무효
+                        // 인증 무효 (login/logout/회원가입)
                         .requestMatchers(HttpMethod.POST, "/api/auth/login").permitAll()
                         .requestMatchers(HttpMethod.POST, "/api/auth/logout").permitAll()
-
-                        // 회원가입 허용
                         .requestMatchers(HttpMethod.POST, "/api/members/**").permitAll()
 
                         // 인증 api
                         .requestMatchers("/api/admin/**").hasRole("ADMIN")
                         .requestMatchers("/api/**").authenticated()
 
-                        // 그 외
+                        // 정적 리소스
                         .anyRequest().permitAll())
 
                 .exceptionHandling(ex -> ex
-                        // API 요청은 로그인 페이지로 리다이렉트하지 말고 401로
                         .defaultAuthenticationEntryPointFor(
                                 new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED),
                                 request -> request.getRequestURI().startsWith("/api/")))
@@ -52,6 +49,7 @@ public class SecurityConfig {
                         .successHandler((req, res, auth) -> {
                             res.setStatus(200);
                             res.setContentType("application/json;charset=UTF-8");
+
                             res.getWriter().write("{\"ok\":true}");
                         })
                         .failureHandler(customAuthFailureHandler))

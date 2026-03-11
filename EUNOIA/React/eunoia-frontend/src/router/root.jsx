@@ -13,6 +13,8 @@ const SignupPage = lazy(() => import('../pages/signUp/SignupPage'));
 const AdminPendingPage = lazy(() => import('../pages/admin/AdminPendingPage'));
 const RoadmapPage = lazy(() => import('../pages/roadmap/RoadmapPage'));
 const MetaAnalysisPage = lazy(() => import('../pages/meta/MetaAnalysisPage'));
+//임시) 백업페이지
+const BackupDownloadPage = lazy(() => import('../pages/backup/BackupDownloadPage'));
 
 const root = createBrowserRouter([
     {
@@ -111,6 +113,17 @@ const root = createBrowserRouter([
             },
         ],
     },
+
+    // 임시 백업페이지 라우터
+    {
+        path: '/minecraft',
+        loader: requireAuth,
+        element: (
+            <Suspense fallback={<div>Loading...</div>}>
+                <BackupDownloadPage />
+            </Suspense>
+        )
+    }
 ]);
 
 export default root;
