@@ -16,7 +16,7 @@ public class ApiResponse<T> {
     private final String message; // 사용자/프론트에 보여줄 메시지
     private final T data; // 실제 데이터 (성공이면 값, 실패면 null)
 
-    // ✅ 성공 응답 (데이터 포함)
+    // 성공 응답 (데이터 포함)
     public static <T> ApiResponse<T> success(T data) {
         return ApiResponse.<T>builder()
                 .success(true)
@@ -26,7 +26,7 @@ public class ApiResponse<T> {
                 .build();
     }
 
-    // ✅ 성공 응답 (데이터 없음 - 예: 삭제 완료)
+    // 성공 응답 (데이터 없음 - 예: 삭제 완료)
     public static ApiResponse<Void> success() {
         return ApiResponse.<Void>builder()
                 .success(true)
@@ -36,7 +36,7 @@ public class ApiResponse<T> {
                 .build();
     }
 
-    // ❌ 실패 응답 (ErrorCode 기반)
+    // 실패 응답 (ErrorCode 기반)
     public static <T> ApiResponse<T> fail(ErrorCode errorCode) {
         return ApiResponse.<T>builder()
                 .success(false)
@@ -46,7 +46,7 @@ public class ApiResponse<T> {
                 .build();
     }
 
-    // ❌ 실패 응답 (ErrorCode + 커스텀 메시지)
+    // 실패 응답 (ErrorCode + 커스텀 메시지)
     public static <T> ApiResponse<T> fail(ErrorCode errorCode, String message) {
         return ApiResponse.<T>builder()
                 .success(false)
